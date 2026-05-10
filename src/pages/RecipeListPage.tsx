@@ -15,7 +15,7 @@ export function RecipeListPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1>Receptbanken</h1>
+        <h1>Receptvalvet</h1>
       </header>
 
       {tags.length > 0 && (

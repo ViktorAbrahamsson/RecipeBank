@@ -4,7 +4,7 @@ import { RecipeDetailPage } from './pages/RecipeDetailPage';
 
 function App() {
   return (
-    <BrowserRouter basename="/RecipeBank">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<RecipeListPage />} />
         <Route path="/recipes/:slug" element={<RecipeDetailPage />} />

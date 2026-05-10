@@ -15,7 +15,7 @@ pnpm preview        # serve the dist/ build locally
 
 - **Vite 4** + **React 18** + **TypeScript** — bundler requires Node 16+; upgrade to Node 18 to use Vite 5
 - **SCSS** via `sass` — CSS Modules used for component styles (`*.module.scss`)
-- **React Router v6** with `HashRouter` — required for GitHub Pages (no server-side routing)
+- **React Router v6** with `BrowserRouter` — clean URLs via 404 redirect trick; `CNAME` file points GitHub Pages to `receptvalvet.se`
 - **js-yaml** — parses YAML frontmatter from recipe `.md` files at runtime
 - **react-markdown** + **remark-gfm** — renders markdown recipe bodies
 
@@ -52,8 +52,8 @@ description: Optional one-line summary shown on the card.
 The recipe appears automatically on the next build — no code changes needed.
 
 ### Routing
-- `#/` → `RecipeListPage` — responsive card grid of all recipes
-- `#/recipes/:slug` → `RecipeDetailPage` — full rendered recipe
+- `/` → `RecipeListPage` — responsive card grid of all recipes
+- `/recipes/:slug` → `RecipeDetailPage` — full rendered recipe
 
 ### SCSS structure
 - `src/styles/variables.scss` — design tokens (colors, fonts, spacing); import with `@use '../styles/variables' as *`
@@ -61,4 +61,4 @@ The recipe appears automatically on the next build — no code changes needed.
 - Component styles live next to the component as `*.module.scss`
 
 ### Deployment
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds with Node 20 + pnpm 8 and deploys `dist/` to the `gh-pages` branch via `peaceiris/actions-gh-pages`. GitHub Pages must be configured to serve from the `gh-pages` branch. The Vite `base` is set to `/RecipeBank/` matching the repository name.
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds with Node 20 + pnpm 8 and deploys `dist/` to the `gh-pages` branch via `peaceiris/actions-gh-pages`. GitHub Pages must be configured to serve from the `gh-pages` branch. The custom domain `receptvalvet.se` is declared in `public/CNAME`. Vite `base` is `'/'`.
