@@ -16,7 +16,6 @@ export function RecipeListPage() {
     <main className={styles.page}>
       <header className={styles.header}>
         <h1>Receptbanken</h1>
-        {/* <p>Familjens recept</p> */}
       </header>
 
       {tags.length > 0 && (
