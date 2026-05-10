@@ -1,0 +1,23 @@
+@use 'variables' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: $color-bg;
+  color: $color-text;
+  font-family: $font-ui;
+  line-height: 1.6;
+}
+
+a {
+  color: $color-accent;
+}
+
+img {
+  max-width: 100%;
+}

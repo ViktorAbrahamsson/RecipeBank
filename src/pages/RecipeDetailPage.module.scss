@@ -1,0 +1,110 @@
+@use '../styles/variables' as *;
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: $spacing-page;
+}
+
+.breadcrumb {
+  margin-bottom: 1.5rem;
+
+  a {
+    font-size: 0.875rem;
+    text-decoration: none;
+    color: $color-muted;
+
+    &:hover {
+      color: $color-accent;
+    }
+  }
+}
+
+.hero {
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 1.75rem;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid $color-border;
+}
+
+.category {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $color-accent;
+}
+
+h1 {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 2rem;
+  font-family: $font-sans;
+  line-height: 1.2;
+}
+
+.meta {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: $color-muted;
+}
+
+.description {
+  margin: 1rem 0 0;
+  color: $color-muted;
+  line-height: 1.6;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.875rem;
+}
+
+.tag {
+  padding: 0.2rem 0.7rem;
+  border: 1px solid $color-border;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: $color-muted;
+}
+
+.content {
+  font-family: $font-sans;
+  line-height: 1.8;
+
+  h2 {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    border-bottom: 1px solid $color-border;
+    padding-bottom: 0.25rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5rem;
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  p {
+    margin: 0.75rem 0;
+  }
+}
