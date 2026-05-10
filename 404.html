@@ -2,16 +2,16 @@
 <html lang="sv-se">
   <head>
     <meta charset="utf-8" />
-    <title>Receptbanken</title>
+    <title>Receptvalvet</title>
     <script>
       // Redirects unknown paths back to index.html encoding the original path
       // as a query string so BrowserRouter can restore it.
-      // pathSegmentsToKeep = 1 accounts for the /RecipeBank/ repo prefix.
+      // pathSegmentsToKeep = 0 — site is at root domain with no path prefix.
       var l = window.location;
       l.replace(
         l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 2).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(1).join('/').replace(/&/g, '~and~') +
+        l.pathname.split('/').slice(0, 1).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(0).join('/').replace(/&/g, '~and~') +
         (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
         l.hash
       );
