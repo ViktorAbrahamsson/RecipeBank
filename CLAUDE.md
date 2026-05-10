@@ -61,4 +61,4 @@ The recipe appears automatically on the next build — no code changes needed.
 - Component styles live next to the component as `*.module.scss`
 
 ### Deployment
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds with Node 20 + pnpm 8 and deploys `dist/` to the `gh-pages` branch via `peaceiris/actions-gh-pages`. GitHub Pages must be configured to serve from the `gh-pages` branch. The Vite `base` is set to `/RecipeBank.Website/` matching the repository name.
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds with Node 20 + pnpm 8 and deploys `dist/` to the `gh-pages` branch via `peaceiris/actions-gh-pages`. GitHub Pages must be configured to serve from the `gh-pages` branch. The Vite `base` is set to `/RecipeBank/` matching the repository name.
