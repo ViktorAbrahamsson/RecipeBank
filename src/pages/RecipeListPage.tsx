@@ -4,6 +4,20 @@ import { RecipeCard } from '../components/RecipeCard';
 import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeListPage.module.scss';
 
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="14" height="14" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="2.5"
+      strokeLinecap="round" strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 export function RecipeListPage() {
   const recipes = loadRecipes();
   const allMeals = getAllMeals();
@@ -11,12 +25,13 @@ export function RecipeListPage() {
   const allTags = getAllTags();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeMeal, setActiveMeal] = useState<string | null>(null);
   const [activeType, setActiveType] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
   const q = searchQuery.toLowerCase().trim();
-  const hasActiveFilter = q !== '' || activeMeal !== null || activeType !== null || activeTag !== null;
+  const hasActiveFilter = activeMeal !== null || activeType !== null || activeTag !== null;
 
   const filtered = recipes.filter((r) => {
     if (activeMeal && r.meal !== activeMeal) return false;
@@ -61,7 +76,6 @@ export function RecipeListPage() {
   );
 
   function clearAll() {
-    setSearchQuery('');
     setActiveMeal(null);
     setActiveType(null);
     setActiveTag(null);
@@ -123,31 +137,47 @@ export function RecipeListPage() {
           />
         </search>
 
-        <FilterRow
-          label="Måltid"
-          options={allMeals}
-          available={availableMeals}
-          active={activeMeal}
-          onToggle={(v) => setActiveMeal(activeMeal === v ? null : v)}
-        />
-        <FilterRow
-          label="Typ"
-          options={allTypes}
-          available={availableTypes}
-          active={activeType}
-          onToggle={(v) => setActiveType(activeType === v ? null : v)}
-        />
-        <FilterRow
-          label="Ingredienser"
-          options={allTags}
-          available={availableTags}
-          active={activeTag}
-          onToggle={(v) => setActiveTag(activeTag === v ? null : v)}
-        />
-        {hasActiveFilter && (
-          <button className={styles['filter__clear']} onClick={clearAll}>
-            Rensa filtrering
+        <div className={styles['recipes__filter-bar']}>
+          <button
+            className={styles['recipes__filter-toggle']}
+            aria-expanded={filtersOpen}
+            aria-controls="recipe-filters"
+            onClick={() => setFiltersOpen((o) => !o)}
+          >
+            Filtrera
+            <ChevronIcon open={filtersOpen} />
           </button>
+          {hasActiveFilter && (
+            <button className={styles['filter__clear']} onClick={clearAll}>
+              Rensa filtrering
+            </button>
+          )}
+        </div>
+
+        {filtersOpen && (
+          <div id="recipe-filters">
+            <FilterRow
+              label="Måltid"
+              options={allMeals}
+              available={availableMeals}
+              active={activeMeal}
+              onToggle={(v) => setActiveMeal(activeMeal === v ? null : v)}
+            />
+            <FilterRow
+              label="Typ"
+              options={allTypes}
+              available={availableTypes}
+              active={activeType}
+              onToggle={(v) => setActiveType(activeType === v ? null : v)}
+            />
+            <FilterRow
+              label="Ingredienser"
+              options={allTags}
+              available={availableTags}
+              active={activeTag}
+              onToggle={(v) => setActiveTag(activeTag === v ? null : v)}
+            />
+          </div>
         )}
       </section>
 

@@ -51,6 +51,38 @@
     }
   }
 
+  &__filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  &__filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid $color-border;
+    border-radius: 999px;
+    background: none;
+    color: $color-muted;
+    font-size: 0.8125rem;
+    font-family: $font-ui;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+
+    &[aria-expanded='true'] {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+  }
+
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -66,6 +98,7 @@
 }
 
 .filter {
+  margin-top: 1.25rem;
   margin-bottom: 1.25rem;
 
   &:last-of-type {

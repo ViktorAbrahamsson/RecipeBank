@@ -14,7 +14,7 @@ export function RecipeCard({ recipe }: Props) {
   return (
     <article className={styles.card}>
       <Link
-        to={`/recipes/${recipe.slug}`}
+        to={`/recept/${recipe.slug}`}
         className={styles['card__link']}
         aria-label={recipe.title}
       >
