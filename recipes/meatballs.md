@@ -1,12 +1,12 @@
 ---
 title: Pappas Köttbullar
 meal: Middag
-type: Köttbullar
+# type: Köttbullar
 servings: 4
 prep_time: 45 min
 author: Håkan
 description: Klassiska svenska köttbullar, precis som pappa göra dem.
-tags: [köttfärs]
+tags: [Köttfärs]
 image: meatballs.jpg
 ---
 

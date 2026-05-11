@@ -7,6 +7,7 @@ export interface RecipeMeta {
   author?: string;
   description?: string;
   image?: string;
+  source?: string;
   tags?: string[];
 }
 

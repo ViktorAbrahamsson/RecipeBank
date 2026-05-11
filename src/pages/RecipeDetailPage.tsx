@@ -26,15 +26,17 @@ export function RecipeDetailPage() {
         <Link to="/">← Alla recept</Link>
       </nav>
 
-      {recipe.image && (
-        <div className={styles.hero}>
+      <div className={styles.hero}>
+        {recipe.image ? (
           <img
             src={recipeImageUrl(recipe.image)}
             alt={recipe.title}
             className={styles.heroImage}
           />
-        </div>
-      )}
+        ) : (
+          <div className={styles.heroPlaceholder} />
+        )}
+      </div>
 
       <header className={styles.header}>
         {recipe.meal && <span className={styles.category}>{recipe.meal}</span>}
@@ -51,6 +53,11 @@ export function RecipeDetailPage() {
               <span key={tag} className={styles.tag}>{tag}</span>
             ))}
           </div>
+        )}
+        {recipe.source && (
+          <p className={styles.source}>
+            Källa: <a href={recipe.source} target="_blank" rel="noopener noreferrer">{recipe.source}</a>
+          </p>
         )}
       </header>
 

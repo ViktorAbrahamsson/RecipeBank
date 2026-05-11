@@ -42,6 +42,7 @@
 .tag {
   padding: 0.3rem 0.85rem;
   border: 1px solid $color-border;
+  text-transform: capitalize;
   border-radius: 999px;
   background: $color-surface;
   color: $color-muted;
@@ -62,6 +63,22 @@
 
   &:hover {
     color: #fff;
+  }
+}
+
+.clearButton {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 0.8125rem;
+  color: $color-muted;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: $color-accent;
   }
 }
 

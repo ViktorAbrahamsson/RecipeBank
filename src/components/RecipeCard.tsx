@@ -13,15 +13,17 @@ function recipeImageUrl(filename: string): string {
 export function RecipeCard({ recipe }: Props) {
   return (
     <Link to={`/recipes/${recipe.slug}`} className={styles.card}>
-      {recipe.image && (
-        <div className={styles.imageWrapper}>
+      <div className={styles.imageWrapper}>
+        {recipe.image ? (
           <img
             src={recipeImageUrl(recipe.image)}
             alt={recipe.title}
             className={styles.image}
           />
-        </div>
-      )}
+        ) : (
+          <div className={styles.imagePlaceholder} />
+        )}
+      </div>
       <div className={styles.body}>
         {recipe.meal && <span className={styles.category}>{recipe.meal}</span>}
         <h2 className={styles.title}>{recipe.title}</h2>

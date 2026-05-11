@@ -41,6 +41,7 @@ type: Gryta             # Soppa | Gryta | Sallad | Wrap | Smörgås | Dryck | Ba
 servings: 4
 prep_time: 30 min
 description: Optional one-line summary shown on the card.
+source: https://example.com/original-recipe  # optional URL shown as "Källa" on the detail page
 tags: [köttfärs, lök]   # ingredient-level detail tags
 ---
 
