@@ -6,7 +6,7 @@ servings: 4
 prep_time: 5 min
 author: Gustav
 description: Snabb och smakrik aioli på majonäs – perfekt som dippsås eller tillbehör.
-tags: [Vitlök, Majonäs]
+tags: [Vitlök]
 image: aioli.jpg
 ---
 

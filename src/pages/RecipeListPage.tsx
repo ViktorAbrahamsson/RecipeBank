@@ -6,20 +6,6 @@ import styles from './RecipeListPage.module.scss';
 
 const PAGE_SIZE = 9;
 
-function ChevronIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      width="14" height="14" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth="2.5"
-      strokeLinecap="round" strokeLinejoin="round"
-      aria-hidden="true"
-      style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
 export function RecipeListPage() {
   const recipes = loadRecipes();
   const allMeals = getAllMeals();
@@ -27,14 +13,13 @@ export function RecipeListPage() {
   const allTags = getAllTags();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeMeal, setActiveMeal] = useState<string | null>(null);
   const [activeType, setActiveType] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const q = searchQuery.toLowerCase().trim();
-  const hasActiveFilter = activeMeal !== null || activeType !== null || activeTag !== null;
+  const hasActiveFilter = q !== '' || activeMeal !== null || activeType !== null || activeTag !== null;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -71,14 +56,12 @@ export function RecipeListPage() {
   const availableMeals = new Set(
     searchFiltered
       .filter((r) => (!activeType || r.type === activeType) && (!activeTag || r.tags?.includes(activeTag)))
-      .map((r) => r.meal)
-      .filter(Boolean) as string[]
+      .map((r) => r.meal).filter(Boolean) as string[]
   );
   const availableTypes = new Set(
     searchFiltered
       .filter((r) => (!activeMeal || r.meal === activeMeal) && (!activeTag || r.tags?.includes(activeTag)))
-      .map((r) => r.type)
-      .filter(Boolean) as string[]
+      .map((r) => r.type).filter(Boolean) as string[]
   );
   const availableTags = new Set(
     searchFiltered
@@ -87,44 +70,40 @@ export function RecipeListPage() {
   );
 
   function clearAll() {
+    setSearchQuery('');
     setActiveMeal(null);
     setActiveType(null);
     setActiveTag(null);
   }
 
-  function FilterRow({
-    label,
-    options,
-    available,
-    active,
-    onToggle,
+  function FilterSelect({
+    id, label, defaultLabel, options, available, value, onChange,
   }: {
+    id: string;
     label: string;
+    defaultLabel: string;
     options: string[];
     available: Set<string>;
-    active: string | null;
-    onToggle: (v: string) => void;
+    value: string | null;
+    onChange: (v: string | null) => void;
   }) {
     const visible = options.filter((o) => available.has(o));
     if (visible.length === 0) return null;
-    const headingId = `filter-${label.toLowerCase()}`;
     return (
-      <section aria-labelledby={headingId} className={styles.filter}>
-        <h2 id={headingId} className={styles['filter__heading']}>{label}</h2>
-        <ul className={styles['filter__pills']} role="list">
-          {visible.map((opt) => (
-            <li key={opt}>
-              <button
-                className={`${styles['filter__pill']} ${active === opt ? styles['filter__pill--active'] : ''}`}
-                aria-pressed={active === opt}
-                onClick={() => onToggle(opt)}
-              >
-                {opt}
-              </button>
-            </li>
+      <div className={styles['toolbar__select-wrapper']}>
+        <label htmlFor={id} className="sr-only">{label}</label>
+        <select
+          id={id}
+          className={`${styles['toolbar__select']} ${value ? styles['toolbar__select--active'] : ''}`}
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value || null)}
+        >
+          <option value="">{defaultLabel}</option>
+          {visible.map((o) => (
+            <option key={o} value={o}>{o.charAt(0).toUpperCase() + o.slice(1)}</option>
           ))}
-        </ul>
-      </section>
+        </select>
+      </div>
     );
   }
 
@@ -135,61 +114,57 @@ export function RecipeListPage() {
         <ThemeToggle />
       </header>
 
-      <section aria-label="Sök och filtrera recept" className={styles['recipes__panel']}>
-        <search className={styles['recipes__search']}>
+      <section aria-label="Sök och filtrera recept" className={styles['recipes__toolbar']}>
+        <search className={styles['toolbar__search']}>
           <label htmlFor="recipe-search" className="sr-only">Sök recept</label>
           <input
             id="recipe-search"
             type="search"
-            className={styles['recipes__search-input']}
-            placeholder="Sök på namn, typ eller tagg…"
+            className={styles['toolbar__search-input']}
+            placeholder="Sök på recept…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </search>
 
-        <div className={styles['recipes__filter-bar']}>
-          <button
-            className={styles['recipes__filter-toggle']}
-            aria-expanded={filtersOpen}
-            aria-controls="recipe-filters"
-            onClick={() => setFiltersOpen((o) => !o)}
-          >
-            Filtrera
-            <ChevronIcon open={filtersOpen} />
-          </button>
+        <div className={styles['toolbar__filters']}>
+          <FilterSelect
+            id="filter-maltid"
+            label="Måltid"
+            defaultLabel="Måltid"
+            options={allMeals}
+            available={availableMeals}
+            value={activeMeal}
+            onChange={setActiveMeal}
+          />
+          <FilterSelect
+            id="filter-typ"
+            label="Typ"
+            defaultLabel="Typ"
+            options={allTypes}
+            available={availableTypes}
+            value={activeType}
+            onChange={setActiveType}
+          />
+          <FilterSelect
+            id="filter-ingredienser"
+            label="Ingredienser"
+            defaultLabel="Ingrediens"
+            options={allTags}
+            available={availableTags}
+            value={activeTag}
+            onChange={setActiveTag}
+          />
           {hasActiveFilter && (
-            <button className={styles['filter__clear']} onClick={clearAll}>
-              Rensa filtrering
+            <button
+              className={styles['toolbar__clear']}
+              onClick={clearAll}
+              aria-label="Rensa alla filter"
+            >
+              ✕
             </button>
           )}
         </div>
-
-        {filtersOpen && (
-          <div id="recipe-filters">
-            <FilterRow
-              label="Måltid"
-              options={allMeals}
-              available={availableMeals}
-              active={activeMeal}
-              onToggle={(v) => setActiveMeal(activeMeal === v ? null : v)}
-            />
-            <FilterRow
-              label="Typ"
-              options={allTypes}
-              available={availableTypes}
-              active={activeType}
-              onToggle={(v) => setActiveType(activeType === v ? null : v)}
-            />
-            <FilterRow
-              label="Ingredienser"
-              options={allTags}
-              available={availableTags}
-              active={activeTag}
-              onToggle={(v) => setActiveTag(activeTag === v ? null : v)}
-            />
-          </div>
-        )}
       </section>
 
       <section aria-label="Recept">
@@ -211,20 +186,14 @@ export function RecipeListPage() {
                   onClick={() => setCurrentPage((p) => p - 1)}
                   disabled={page === 1}
                   aria-label="Föregående sida"
-                >
-                  ←
-                </button>
-                <span className={styles['recipes__pagination-info']}>
-                  {page} / {totalPages}
-                </span>
+                >←</button>
+                <span className={styles['recipes__pagination-info']}>{page} / {totalPages}</span>
                 <button
                   className={styles['recipes__pagination-btn']}
                   onClick={() => setCurrentPage((p) => p + 1)}
                   disabled={page === totalPages}
                   aria-label="Nästa sida"
-                >
-                  →
-                </button>
+                >→</button>
               </nav>
             )}
           </>

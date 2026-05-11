@@ -4,7 +4,7 @@ meal: Lunch
 type: Sallad
 servings: 2
 prep_time: 15 min
-tags: [sallad, kyckling]
+tags: [kyckling]
 description: Tillfälligt testrecept.
 ---
 

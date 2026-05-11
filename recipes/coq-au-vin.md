@@ -7,7 +7,7 @@ prep_time: 45 min
 author: Tareq Taylor
 description: Klassisk fransk kycklinggryta med rött vin, bacon och rotgrönsaker.
 source: https://www.koket.se/coq-au-vin-tareq-taylors-recept
-tags: [Kyckling, Vin]
+tags: [Kyckling]
 image: coq-au-vin.jpg
 ---
 

@@ -4,7 +4,7 @@ meal: Frukost
 type: Dryck
 servings: 1
 prep_time: 5 min
-tags: [banan, bär]
+tags: [banan]
 description: Tillfälligt testrecept.
 ---
 

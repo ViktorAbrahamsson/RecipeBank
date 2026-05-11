@@ -18,68 +18,19 @@
     }
   }
 
-  &__panel {
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     background: $color-surface;
     border: 1px solid $color-border;
     border-radius: 12px;
-    padding: 1.25rem 1.5rem;
+    padding: 0.75rem 1rem;
     margin-bottom: 2rem;
-  }
 
-  &__search {
-    margin-bottom: 1.25rem;
-  }
-
-  &__search-input {
-    width: 100%;
-    padding: 0.6rem 1rem;
-    border: 1px solid $color-border;
-    border-radius: 8px;
-    background: $color-bg;
-    font-size: 0.9375rem;
-    font-family: $font-ui;
-    color: $color-text;
-    outline: none;
-    transition: border-color 0.15s ease;
-
-    &::placeholder {
-      color: $color-muted;
-    }
-
-    &:focus {
-      border-color: $color-accent;
-    }
-  }
-
-  &__filter-bar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 0.75rem;
-  }
-
-  &__filter-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.85rem;
-    border: 1px solid $color-border;
-    border-radius: 999px;
-    background: none;
-    color: $color-muted;
-    font-size: 0.8125rem;
-    font-family: $font-ui;
-    cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease;
-
-    &:hover {
-      border-color: $color-accent;
-      color: $color-accent;
-    }
-
-    &[aria-expanded='true'] {
-      border-color: $color-accent;
-      color: $color-accent;
+    @media (max-width: 680px) {
+      flex-direction: column;
+      align-items: stretch;
     }
   }
 
@@ -137,72 +88,109 @@
   }
 }
 
-.filter {
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-
-  &:last-of-type {
-    margin-bottom: 0;
+.toolbar {
+  &__search {
+    flex: 1;
+    min-width: 0;
   }
 
-  &__heading {
-    margin: 0 0 0.4rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    font-family: $font-ui;
-    color: $color-muted;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  &__pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  &__pill {
-    padding: 0.3rem 0.85rem;
+  &__search-input {
+    width: 100%;
+    padding: 0.5rem 0.875rem;
     border: 1px solid $color-border;
-    text-transform: capitalize;
-    border-radius: 999px;
+    border-radius: 8px;
+    background: $color-bg;
+    font-size: 0.9375rem;
+    font-family: $font-ui;
+    color: $color-text;
+    outline: none;
+    transition: border-color 0.15s ease;
+
+    &::placeholder {
+      color: $color-muted;
+    }
+
+    &:focus {
+      border-color: $color-accent;
+    }
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+
+    @media (max-width: 680px) {
+      flex-wrap: wrap;
+    }
+  }
+
+  &__select-wrapper {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 3.5px solid transparent;
+      border-right: 3.5px solid transparent;
+      border-top: 4.5px solid $color-muted;
+      pointer-events: none;
+    }
+  }
+
+  &__select {
+    appearance: none;
+    padding: 0.5rem 1.75rem 0.5rem 0.75rem;
+    border: 1px solid $color-muted;
+    border-radius: 8px;
     background: $color-bg;
     color: $color-muted;
     font-size: 0.8125rem;
+    font-family: $font-ui;
     cursor: pointer;
-    transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+    transition: border-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
 
     &:hover {
       border-color: $color-accent;
       color: $color-accent;
     }
 
-    &--active {
-      background: $color-accent;
-      border-color: $color-accent;
-      color: var(--pill-active-text);
+    &:focus {
+      outline: 2px solid $color-accent;
+      outline-offset: 2px;
+    }
 
-      &:hover {
-        color: var(--pill-active-text);
-      }
+    &--active {
+      border-color: $color-accent;
+      color: $color-accent;
     }
   }
 
   &__clear {
-    display: inline-block;
-    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
     padding: 0;
+    border: 1px solid $color-border;
+    border-radius: 8px;
     background: none;
-    border: none;
-    font-size: 0.8125rem;
     color: $color-muted;
+    font-size: 0.75rem;
     cursor: pointer;
-    text-decoration: underline;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease, color 0.15s ease;
 
     &:hover {
+      border-color: $color-accent;
       color: $color-accent;
     }
   }
