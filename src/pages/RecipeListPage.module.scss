@@ -6,17 +6,49 @@
   padding: $spacing-page;
 
   &__header {
-    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
 
     h1 {
-      margin: 0 0 0.25rem;
+      margin: 0;
       font-size: 2rem;
       font-family: $font-sans;
     }
   }
 
-  &__filters {
-    margin-bottom: 0.5rem;
+  &__panel {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &__search {
+    margin-bottom: 1.25rem;
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    background: $color-bg;
+    font-size: 0.9375rem;
+    font-family: $font-ui;
+    color: $color-text;
+    outline: none;
+    transition: border-color 0.15s ease;
+
+    &::placeholder {
+      color: $color-muted;
+    }
+
+    &:focus {
+      border-color: $color-accent;
+    }
   }
 
   &__grid {
@@ -34,7 +66,11 @@
 }
 
 .filter {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 
   &__heading {
     margin: 0 0 0.4rem;
@@ -60,7 +96,7 @@
     border: 1px solid $color-border;
     text-transform: capitalize;
     border-radius: 999px;
-    background: $color-surface;
+    background: $color-bg;
     color: $color-muted;
     font-size: 0.8125rem;
     cursor: pointer;
@@ -84,7 +120,7 @@
 
   &__clear {
     display: inline-block;
-    margin-bottom: 1.5rem;
+    margin-top: 1rem;
     padding: 0;
     background: none;
     border: none;

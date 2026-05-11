@@ -1,9 +1,30 @@
-$color-bg: #fafaf8;
-$color-surface: #ffffff;
-$color-border: #e8e5e0;
-$color-text: #1a1a18;
-$color-muted: #6b6860;
-$color-accent: #c8622a;
+// Light mode (default)
+:root {
+  --color-bg: #fafaf8;
+  --color-surface: #ffffff;
+  --color-border: #e8e5e0;
+  --color-text: #1a1a18;
+  --color-muted: #6b6860;
+  --color-accent: #0284c7;
+}
+
+// Dark mode
+[data-theme='dark'] {
+  --color-bg: #0f1117;
+  --color-surface: #1a1d2e;
+  --color-border: #252836;
+  --color-text: #e2e0db;
+  --color-muted: #8a8895;
+  --color-accent: #38bdf8;
+}
+
+// SCSS aliases — components use these without knowing about CSS custom properties
+$color-bg: var(--color-bg);
+$color-surface: var(--color-surface);
+$color-border: var(--color-border);
+$color-text: var(--color-text);
+$color-muted: var(--color-muted);
+$color-accent: var(--color-accent);
 
 $font-sans: 'Georgia', serif;
 $font-ui: system-ui, -apple-system, sans-serif;

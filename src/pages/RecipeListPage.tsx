@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { loadRecipes, getAllMeals, getAllTypes, getAllTags } from '../utils/loadRecipes';
 import { RecipeCard } from '../components/RecipeCard';
+import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeListPage.module.scss';
 
 export function RecipeListPage() {
@@ -9,36 +10,62 @@ export function RecipeListPage() {
   const allTypes = getAllTypes();
   const allTags = getAllTags();
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeMeal, setActiveMeal] = useState<string | null>(null);
   const [activeType, setActiveType] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
-  const hasActiveFilter = activeMeal !== null || activeType !== null || activeTag !== null;
+  const q = searchQuery.toLowerCase().trim();
+  const hasActiveFilter = q !== '' || activeMeal !== null || activeType !== null || activeTag !== null;
 
   const filtered = recipes.filter((r) => {
     if (activeMeal && r.meal !== activeMeal) return false;
     if (activeType && r.type !== activeType) return false;
     if (activeTag && !r.tags?.includes(activeTag)) return false;
+    if (q) {
+      const inTitle = r.title.toLowerCase().includes(q);
+      const inTags = r.tags?.some((t) => t.toLowerCase().includes(q)) ?? false;
+      const inType = r.type?.toLowerCase().includes(q) ?? false;
+      const inMeal = r.meal?.toLowerCase().includes(q) ?? false;
+      if (!inTitle && !inTags && !inType && !inMeal) return false;
+    }
     return true;
   });
 
+  const searchFiltered = q
+    ? recipes.filter((r) => {
+        const inTitle = r.title.toLowerCase().includes(q);
+        const inTags = r.tags?.some((t) => t.toLowerCase().includes(q)) ?? false;
+        const inType = r.type?.toLowerCase().includes(q) ?? false;
+        const inMeal = r.meal?.toLowerCase().includes(q) ?? false;
+        return inTitle || inTags || inType || inMeal;
+      })
+    : recipes;
+
   const availableMeals = new Set(
-    recipes
+    searchFiltered
       .filter((r) => (!activeType || r.type === activeType) && (!activeTag || r.tags?.includes(activeTag)))
       .map((r) => r.meal)
       .filter(Boolean) as string[]
   );
   const availableTypes = new Set(
-    recipes
+    searchFiltered
       .filter((r) => (!activeMeal || r.meal === activeMeal) && (!activeTag || r.tags?.includes(activeTag)))
       .map((r) => r.type)
       .filter(Boolean) as string[]
   );
   const availableTags = new Set(
-    recipes
+    searchFiltered
       .filter((r) => (!activeMeal || r.meal === activeMeal) && (!activeType || r.type === activeType))
       .flatMap((r) => r.tags ?? [])
   );
+
+  function clearAll() {
+    setSearchQuery('');
+    setActiveMeal(null);
+    setActiveType(null);
+    setActiveTag(null);
+  }
 
   function FilterRow({
     label,
@@ -80,9 +107,22 @@ export function RecipeListPage() {
     <main className={styles.recipes}>
       <header className={styles['recipes__header']}>
         <h1>Receptvalvet</h1>
+        <ThemeToggle />
       </header>
 
-      <section aria-label="Filtrera recept" className={styles['recipes__filters']}>
+      <section aria-label="Sök och filtrera recept" className={styles['recipes__panel']}>
+        <search className={styles['recipes__search']}>
+          <label htmlFor="recipe-search" className="sr-only">Sök recept</label>
+          <input
+            id="recipe-search"
+            type="search"
+            className={styles['recipes__search-input']}
+            placeholder="Sök på namn, typ eller tagg…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </search>
+
         <FilterRow
           label="Måltid"
           options={allMeals}
@@ -105,10 +145,7 @@ export function RecipeListPage() {
           onToggle={(v) => setActiveTag(activeTag === v ? null : v)}
         />
         {hasActiveFilter && (
-          <button
-            className={styles['filter__clear']}
-            onClick={() => { setActiveMeal(null); setActiveType(null); setActiveTag(null); }}
-          >
+          <button className={styles['filter__clear']} onClick={clearAll}>
             Rensa filtrering
           </button>
         )}

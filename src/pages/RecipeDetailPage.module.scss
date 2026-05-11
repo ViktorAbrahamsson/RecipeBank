@@ -5,8 +5,14 @@
   margin: 0 auto;
   padding: $spacing-page;
 
-  &__breadcrumb {
+  &__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1.5rem;
+  }
+
+  &__breadcrumb {
 
     a {
       font-size: 0.875rem;

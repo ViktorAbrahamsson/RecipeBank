@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getRecipeBySlug } from '../utils/loadRecipes';
+import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeDetailPage.module.scss';
 
 function recipeImageUrl(filename: string): string {
@@ -22,9 +23,12 @@ export function RecipeDetailPage() {
 
   return (
     <main className={styles.recipe}>
-      <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
-        <Link to="/">← Alla recept</Link>
-      </nav>
+      <div className={styles['recipe__topbar']}>
+        <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
+          <Link to="/">← Alla recept</Link>
+        </nav>
+        <ThemeToggle />
+      </div>
 
       <article>
         <figure className={styles['recipe__hero']}>
