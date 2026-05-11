@@ -3,24 +3,33 @@
 .toggle {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
   background: none;
   border: 1px solid $color-border;
-  border-radius: 6px;
-  color: $color-muted;
+  border-radius: 999px;
   cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease;
   flex-shrink: 0;
 
   &:hover {
     border-color: $color-accent;
-    color: $color-accent;
   }
 
   svg {
     display: block;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    color: $color-muted;
+    opacity: 0.4;
+    transition: color 0.15s ease, opacity 0.15s ease;
+
+    &--active {
+      color: $color-accent;
+      opacity: 1;
+    }
   }
 }
