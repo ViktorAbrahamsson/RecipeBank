@@ -30,19 +30,29 @@ recipes/*.md  →  src/utils/loadRecipes.ts  →  pages
 
 `loadRecipes.ts` uses `import.meta.glob('../../recipes/*.md', { as: 'raw', eager: true })` to import all markdown files as strings, then parses each one with a regex splitter + `js-yaml` to extract frontmatter (`RecipeMeta`) and the markdown body (`content`). The filename (minus `.md`) becomes the route slug.
 
+### Theming (dark / light mode)
+Colors are defined as CSS custom properties in `src/styles/variables.scss` under `:root` (light) and `[data-theme='dark']` (dark). SCSS variables are aliases to `var(--color-*)` so component files don't need to change when adding dark mode overrides. The active theme is stored in `localStorage` and applied to `<html data-theme>` before React renders (in `main.tsx`) to prevent flash. Default is dark mode. The `ThemeToggle` component (sun/moon button) in `src/components/ThemeToggle.tsx` handles switching on both pages.
+
+### CSS class naming
+CSS Modules with `generateScopedName: '[local]'` (no hash) — configured in `vite.config.ts`. All class names follow BEM: `block__element--modifier`. Bracket notation required for names with dashes or double-dash modifiers (e.g. `styles['filter__pill--active']`).
+
+### Search
+`RecipeListPage` has a live free-text search that matches against `title`, `tags`, `type`, and `meal`. Works in conjunction with the three filter pill rows (Måltid / Typ / Ingredienser). All grouped in a single panel below the page header.
+
 ### Adding a recipe
 Create a new file in `recipes/` with this frontmatter structure:
 
 ```markdown
 ---
 title: Recipe Title
-meal: Middag            # Frukost | Lunch | Middag | Efterrätt | Snack
-type: Gryta             # Soppa | Gryta | Sallad | Wrap | Smörgås | Dryck | Bakverk
+meal: Middag            # Frukost | Lunch | Middag | Efterrätt | Fika | Tillbehör | Snack
+type: Gryta             # Soppa | Gryta | Sallad | Wrap | Smörgås | Dryck | Bakverk | Tårta | Kakor | Gröt | Sås
 servings: 4
 prep_time: 30 min
 description: Optional one-line summary shown on the card.
 source: https://example.com/original-recipe  # optional URL shown as "Källa" on the detail page
 tags: [köttfärs, lök]   # ingredient-level detail tags
+image: filename.jpg     # placed in public/images/recipes/
 ---
 
 ## Ingredients
