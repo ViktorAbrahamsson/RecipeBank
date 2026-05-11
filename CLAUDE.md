@@ -36,10 +36,12 @@ Create a new file in `recipes/` with this frontmatter structure:
 ```markdown
 ---
 title: Recipe Title
-category: Dinner        # used for display and future filtering
+meal: Middag            # Frukost | Lunch | Middag | Efterrätt | Snack
+type: Gryta             # Soppa | Gryta | Sallad | Wrap | Smörgås | Dryck | Bakverk
 servings: 4
 prep_time: 30 min
 description: Optional one-line summary shown on the card.
+tags: [köttfärs, lök]   # ingredient-level detail tags
 ---
 
 ## Ingredients

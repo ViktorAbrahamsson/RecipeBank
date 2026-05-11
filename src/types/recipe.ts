@@ -1,6 +1,7 @@
 export interface RecipeMeta {
   title: string;
-  category: string;
+  meal?: string;
+  type?: string;
   servings: number;
   prep_time: string;
   author?: string;

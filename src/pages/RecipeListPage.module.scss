@@ -21,11 +21,22 @@
   }
 }
 
+.filterSection {
+  margin-bottom: 1.5rem;
+}
+
+.filterLabel {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  color: $color-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.75rem;
 }
 
 .tag {

@@ -37,7 +37,7 @@ export function RecipeDetailPage() {
       )}
 
       <header className={styles.header}>
-        <span className={styles.category}>{recipe.category}</span>
+        {recipe.meal && <span className={styles.category}>{recipe.meal}</span>}
         <h1>{recipe.title}</h1>
         <div className={styles.meta}>
           <span>{recipe.servings} portioner</span>

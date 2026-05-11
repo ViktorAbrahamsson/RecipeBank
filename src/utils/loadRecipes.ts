@@ -31,6 +31,16 @@ export function getRecipeBySlug(slug: string): Recipe | undefined {
   return loadRecipes().find((r) => r.slug === slug);
 }
 
+export function getAllMeals(): string[] {
+  const meals = loadRecipes().map((r) => r.meal).filter(Boolean) as string[];
+  return [...new Set(meals)].sort();
+}
+
+export function getAllTypes(): string[] {
+  const types = loadRecipes().map((r) => r.type).filter(Boolean) as string[];
+  return [...new Set(types)].sort();
+}
+
 export function getAllTags(): string[] {
   const tags = loadRecipes().flatMap((r) => r.tags ?? []);
   return [...new Set(tags)].sort();

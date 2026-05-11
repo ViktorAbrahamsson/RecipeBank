@@ -23,7 +23,7 @@ export function RecipeCard({ recipe }: Props) {
         </div>
       )}
       <div className={styles.body}>
-        <span className={styles.category}>{recipe.category}</span>
+        {recipe.meal && <span className={styles.category}>{recipe.meal}</span>}
         <h2 className={styles.title}>{recipe.title}</h2>
         <div className={styles.meta}>
           <span>{recipe.servings} portioner</span>
