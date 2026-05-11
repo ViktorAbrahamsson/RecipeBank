@@ -6,6 +6,7 @@ import { Footer } from './components/Footer';
 function App() {
   return (
     <BrowserRouter>
+      <a href="#main-content" className="skip-link">Hoppa till innehållet</a>
       <Routes>
         <Route path="/" element={<RecipeListPage />} />
         <Route path="/recept/:slug" element={<RecipeDetailPage />} />

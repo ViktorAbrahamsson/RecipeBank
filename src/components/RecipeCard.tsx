@@ -23,6 +23,7 @@ export function RecipeCard({ recipe }: Props) {
             <img
               src={recipeImageUrl(recipe.image)}
               alt=""
+              loading="lazy"
               className={styles['card__image']}
             />
           ) : (

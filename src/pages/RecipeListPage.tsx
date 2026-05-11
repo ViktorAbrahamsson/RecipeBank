@@ -22,6 +22,10 @@ export function RecipeListPage() {
   const hasActiveFilter = q !== '' || activeMeal !== null || activeType !== null || activeTag !== null;
 
   useEffect(() => {
+    document.title = 'Receptvalvet – Familjens receptsamling';
+  }, []);
+
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, activeMeal, activeType, activeTag]);
 
@@ -108,7 +112,7 @@ export function RecipeListPage() {
   }
 
   return (
-    <main className={styles.recipes}>
+    <main id="main-content" className={styles.recipes}>
       <header className={styles['recipes__header']}>
         <h1>Receptvalvet</h1>
         <ThemeToggle />
@@ -168,6 +172,11 @@ export function RecipeListPage() {
       </section>
 
       <section aria-label="Recept">
+        <p className="sr-only" aria-live="polite" aria-atomic="true">
+          {filtered.length === 0
+            ? 'Inga recept hittades.'
+            : `${filtered.length} recept hittade${filtered.length === 1 ? 's' : ''}.`}
+        </p>
         {filtered.length === 0 ? (
           <p className={styles['recipes__empty']}>Inga recept hittades.</p>
         ) : (

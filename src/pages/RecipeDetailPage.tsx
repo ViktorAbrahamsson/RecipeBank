@@ -1,9 +1,17 @@
 import { useParams, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getRecipeBySlug } from '../utils/loadRecipes';
 import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeDetailPage.module.scss';
+
+function toPT(s: string): string | undefined {
+  const h = s.match(/(\d+)\s*h/i);
+  const m = s.match(/(\d+)\s*min/i);
+  if (!h && !m) return undefined;
+  return 'PT' + (h ? h[1] + 'H' : '') + (m ? m[1] + 'M' : '');
+}
 
 function recipeImageUrl(filename: string): string {
   return `${import.meta.env.BASE_URL}images/recipes/${filename}`;
@@ -13,19 +21,48 @@ export function RecipeDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const recipe = slug ? getRecipeBySlug(slug) : undefined;
 
+  useEffect(() => {
+    document.title = recipe
+      ? `${recipe.title} – Receptvalvet`
+      : 'Recept hittades inte – Receptvalvet';
+  }, [recipe]);
+
+  useEffect(() => {
+    if (!recipe) return;
+    const schema: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'Recipe',
+      name: recipe.title,
+      url: window.location.href,
+      ...(recipe.description && { description: recipe.description }),
+      ...(recipe.image && { image: [`${window.location.origin}/images/recipes/${recipe.image}`] }),
+      ...(recipe.author && { author: { '@type': 'Person', name: recipe.author } }),
+      ...(recipe.servings && { recipeYield: String(recipe.servings) }),
+      ...(recipe.prep_time && { prepTime: toPT(recipe.prep_time) }),
+      ...(recipe.type && { recipeCategory: recipe.type }),
+      ...(recipe.tags?.length && { keywords: recipe.tags.join(', ') }),
+    };
+    const script = document.createElement('script');
+    script.id = 'recipe-jsonld';
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
+    return () => { document.getElementById('recipe-jsonld')?.remove(); };
+  }, [recipe]);
+
   if (!recipe) {
     return (
-      <main className={styles.recipe}>
+      <main id="main-content" className={styles.recipe}>
         <p>Receptet hittades inte. <Link to="/">Tillbaka till recept</Link></p>
       </main>
     );
   }
 
   return (
-    <main className={styles.recipe}>
+    <main id="main-content" className={styles.recipe}>
       <div className={styles['recipe__topbar']}>
         <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
-          <Link to="/">← Alla recept</Link>
+          <Link to="/"><span aria-hidden="true">← </span>Alla recept</Link>
         </nav>
         <ThemeToggle />
       </div>
