@@ -1,93 +1,100 @@
 @use '../styles/variables' as *;
 
-.page {
+.recipes {
   max-width: $max-width;
   margin: 0 auto;
   padding: $spacing-page;
-}
 
-.header {
-  margin-bottom: 2.5rem;
+  &__header {
+    margin-bottom: 2.5rem;
 
-  h1 {
-    margin: 0 0 0.25rem;
-    font-size: 2rem;
-    font-family: $font-sans;
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: 2rem;
+      font-family: $font-sans;
+    }
   }
 
-  p {
+  &__filters {
+    margin-bottom: 0.5rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    list-style: none;
+    padding: 0;
     margin: 0;
+  }
+
+  &__empty {
     color: $color-muted;
   }
 }
 
-.filterSection {
+.filter {
   margin-bottom: 1.5rem;
-}
 
-.filterLabel {
-  margin: 0 0 0.4rem;
-  font-size: 0.75rem;
-  color: $color-muted;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag {
-  padding: 0.3rem 0.85rem;
-  border: 1px solid $color-border;
-  text-transform: capitalize;
-  border-radius: 999px;
-  background: $color-surface;
-  color: $color-muted;
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
-
-  &:hover {
-    border-color: $color-accent;
-    color: $color-accent;
+  &__heading {
+    margin: 0 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: $font-ui;
+    color: $color-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
-}
 
-.tagActive {
-  background: $color-accent;
-  border-color: $color-accent;
-  color: #fff;
-
-  &:hover {
-    color: #fff;
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
-}
 
-.clearButton {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  padding: 0;
-  background: none;
-  border: none;
-  font-size: 0.8125rem;
-  color: $color-muted;
-  cursor: pointer;
-  text-decoration: underline;
+  &__pill {
+    padding: 0.3rem 0.85rem;
+    border: 1px solid $color-border;
+    text-transform: capitalize;
+    border-radius: 999px;
+    background: $color-surface;
+    color: $color-muted;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
 
-  &:hover {
-    color: $color-accent;
+    &:hover {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+
+    &--active {
+      background: $color-accent;
+      border-color: $color-accent;
+      color: #fff;
+
+      &:hover {
+        color: #fff;
+      }
+    }
   }
-}
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
-}
+  &__clear {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 0.8125rem;
+    color: $color-muted;
+    cursor: pointer;
+    text-decoration: underline;
 
-.empty {
-  color: $color-muted;
+    &:hover {
+      color: $color-accent;
+    }
+  }
 }

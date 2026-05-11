@@ -22,7 +22,6 @@ export function RecipeListPage() {
     return true;
   });
 
-  // Each dimension's available options are based on the OTHER two active filters.
   const availableMeals = new Set(
     recipes
       .filter((r) => (!activeType || r.type === activeType) && (!activeTag || r.tags?.includes(activeTag)))
@@ -56,70 +55,78 @@ export function RecipeListPage() {
   }) {
     const visible = options.filter((o) => available.has(o));
     if (visible.length === 0) return null;
+    const headingId = `filter-${label.toLowerCase()}`;
     return (
-      <div className={styles.filterSection}>
-        <p className={styles.filterLabel}>{label}</p>
-        <div className={styles.tags}>
+      <section aria-labelledby={headingId} className={styles.filter}>
+        <h2 id={headingId} className={styles['filter__heading']}>{label}</h2>
+        <ul className={styles['filter__pills']} role="list">
           {visible.map((opt) => (
-            <button
-              key={opt}
-              className={`${styles.tag} ${active === opt ? styles.tagActive : ''}`}
-              onClick={() => onToggle(opt)}
-            >
-              {opt}
-            </button>
+            <li key={opt}>
+              <button
+                className={`${styles['filter__pill']} ${active === opt ? styles['filter__pill--active'] : ''}`}
+                aria-pressed={active === opt}
+                onClick={() => onToggle(opt)}
+              >
+                {opt}
+              </button>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
     );
   }
 
   return (
-    <main className={styles.page}>
-      <header className={styles.header}>
+    <main className={styles.recipes}>
+      <header className={styles['recipes__header']}>
         <h1>Receptvalvet</h1>
       </header>
 
-      <FilterRow
-        label="Måltid"
-        options={allMeals}
-        available={availableMeals}
-        active={activeMeal}
-        onToggle={(v) => setActiveMeal(activeMeal === v ? null : v)}
-      />
-      <FilterRow
-        label="Typ"
-        options={allTypes}
-        available={availableTypes}
-        active={activeType}
-        onToggle={(v) => setActiveType(activeType === v ? null : v)}
-      />
-      <FilterRow
-        label="Ingredienser"
-        options={allTags}
-        available={availableTags}
-        active={activeTag}
-        onToggle={(v) => setActiveTag(activeTag === v ? null : v)}
-      />
+      <section aria-label="Filtrera recept" className={styles['recipes__filters']}>
+        <FilterRow
+          label="Måltid"
+          options={allMeals}
+          available={availableMeals}
+          active={activeMeal}
+          onToggle={(v) => setActiveMeal(activeMeal === v ? null : v)}
+        />
+        <FilterRow
+          label="Typ"
+          options={allTypes}
+          available={availableTypes}
+          active={activeType}
+          onToggle={(v) => setActiveType(activeType === v ? null : v)}
+        />
+        <FilterRow
+          label="Ingredienser"
+          options={allTags}
+          available={availableTags}
+          active={activeTag}
+          onToggle={(v) => setActiveTag(activeTag === v ? null : v)}
+        />
+        {hasActiveFilter && (
+          <button
+            className={styles['filter__clear']}
+            onClick={() => { setActiveMeal(null); setActiveType(null); setActiveTag(null); }}
+          >
+            Rensa filtrering
+          </button>
+        )}
+      </section>
 
-      {hasActiveFilter && (
-        <button
-          className={styles.clearButton}
-          onClick={() => { setActiveMeal(null); setActiveType(null); setActiveTag(null); }}
-        >
-          Rensa filtrering
-        </button>
-      )}
-
-      {filtered.length === 0 ? (
-        <p className={styles.empty}>Inga recept hittades.</p>
-      ) : (
-        <div className={styles.grid}>
-          {filtered.map((recipe) => (
-            <RecipeCard key={recipe.slug} recipe={recipe} />
-          ))}
-        </div>
-      )}
+      <section aria-label="Recept">
+        {filtered.length === 0 ? (
+          <p className={styles['recipes__empty']}>Inga recept hittades.</p>
+        ) : (
+          <ul className={styles['recipes__grid']}>
+            {filtered.map((recipe) => (
+              <li key={recipe.slug}>
+                <RecipeCard recipe={recipe} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   );
 }

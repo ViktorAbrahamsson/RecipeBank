@@ -14,55 +14,61 @@ export function RecipeDetailPage() {
 
   if (!recipe) {
     return (
-      <main className={styles.page}>
+      <main className={styles.recipe}>
         <p>Receptet hittades inte. <Link to="/">Tillbaka till recept</Link></p>
       </main>
     );
   }
 
   return (
-    <main className={styles.page}>
-      <nav className={styles.breadcrumb}>
+    <main className={styles.recipe}>
+      <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
         <Link to="/">← Alla recept</Link>
       </nav>
 
-      <div className={styles.hero}>
-        {recipe.image ? (
-          <img
-            src={recipeImageUrl(recipe.image)}
-            alt={recipe.title}
-            className={styles.heroImage}
-          />
-        ) : (
-          <div className={styles.heroPlaceholder} />
-        )}
-      </div>
+      <article>
+        <figure className={styles['recipe__hero']}>
+          {recipe.image ? (
+            <img
+              src={recipeImageUrl(recipe.image)}
+              alt={recipe.title}
+              className={styles['recipe__hero-image']}
+            />
+          ) : (
+            <div className={styles['recipe__hero-placeholder']} aria-hidden="true" />
+          )}
+        </figure>
 
-      <header className={styles.header}>
-        {recipe.meal && <span className={styles.category}>{recipe.meal}</span>}
-        <h1>{recipe.title}</h1>
-        <div className={styles.meta}>
-          <span>{recipe.servings} portioner</span>
-          <span>{recipe.prep_time}</span>
-          {recipe.author && <span>Av {recipe.author}</span>}
-        </div>
-        {recipe.description && <p className={styles.description}>{recipe.description}</p>}
-        {recipe.tags && recipe.tags.length > 0 && (
-          <div className={styles.tags}>
-            {recipe.tags.map((tag) => (
-              <span key={tag} className={styles.tag}>{tag}</span>
-            ))}
-          </div>
-        )}
-        {recipe.source && (
-          <p className={styles.source}>
-            Källa: <a href={recipe.source} target="_blank" rel="noopener noreferrer">{recipe.source}</a>
-          </p>
-        )}
-      </header>
+        <header className={styles['recipe__header']}>
+          {recipe.meal && (
+            <span className={styles['recipe__category']} aria-label={`Måltidstyp: ${recipe.meal}`}>
+              {recipe.meal}
+            </span>
+          )}
+          <h1>{recipe.title}</h1>
+          <ul className={styles['recipe__meta']}>
+            <li><span className="sr-only">Portioner: </span>{recipe.servings} portioner</li>
+            <li><span className="sr-only">Tillagningstid: </span>{recipe.prep_time}</li>
+            {recipe.author && <li><span className="sr-only">Av: </span>{recipe.author}</li>}
+          </ul>
+          {recipe.description && <p className={styles['recipe__description']}>{recipe.description}</p>}
+          {recipe.tags && recipe.tags.length > 0 && (
+            <ul className={styles['recipe__tags']} aria-label="Taggar">
+              {recipe.tags.map((tag) => (
+                <li key={tag} className={styles['recipe__tag']}>{tag}</li>
+              ))}
+            </ul>
+          )}
+          {recipe.source && (
+            <p className={styles['recipe__source']}>
+              Källa: <a href={recipe.source} target="_blank" rel="noopener noreferrer">{recipe.source}</a>
+            </p>
+          )}
+        </header>
 
-      <article className={styles.content}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{recipe.content}</ReactMarkdown>
+        <section aria-label="Recept" className={styles['recipe__content']}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{recipe.content}</ReactMarkdown>
+        </section>
       </article>
     </main>
   );
