@@ -1,0 +1,99 @@
+.footer {
+  background: #08090f;
+  border-top: 1px solid #13151f;
+  margin-top: 4rem;
+
+  &__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 540px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #e2e0db;
+    letter-spacing: -0.01em;
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  &__tagline {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #8a8895;
+    line-height: 1.6;
+    max-width: 22ch;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+
+    @media (min-width: 541px) {
+      align-items: flex-end;
+    }
+  }
+
+  &__nav-heading {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8a8895;
+  }
+
+  &__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    @media (min-width: 541px) {
+      align-items: flex-end;
+    }
+
+    a {
+      font-size: 0.875rem;
+      color: #9996a0;
+      text-decoration: none;
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: #38bdf8;
+      }
+    }
+  }
+
+  &__copy {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem;
+    border-top: 1px solid #13151f;
+    font-size: 0.75rem;
+    color: #8a8895;
+  }
+}

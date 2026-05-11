@@ -95,6 +95,46 @@
   &__empty {
     color: $color-muted;
   }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  &__pagination-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid $color-border;
+    border-radius: 6px;
+    background: none;
+    color: $color-muted;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  &__pagination-info {
+    font-size: 0.875rem;
+    color: $color-muted;
+    min-width: 4rem;
+    text-align: center;
+  }
 }
 
 .filter {
@@ -143,10 +183,10 @@
     &--active {
       background: $color-accent;
       border-color: $color-accent;
-      color: #fff;
+      color: var(--pill-active-text);
 
       &:hover {
-        color: #fff;
+        color: var(--pill-active-text);
       }
     }
   }

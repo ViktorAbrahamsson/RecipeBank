@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { loadRecipes, getAllMeals, getAllTypes, getAllTags } from '../utils/loadRecipes';
 import { RecipeCard } from '../components/RecipeCard';
 import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeListPage.module.scss';
+
+const PAGE_SIZE = 9;
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
@@ -29,9 +31,14 @@ export function RecipeListPage() {
   const [activeMeal, setActiveMeal] = useState<string | null>(null);
   const [activeType, setActiveType] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const q = searchQuery.toLowerCase().trim();
   const hasActiveFilter = activeMeal !== null || activeType !== null || activeTag !== null;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, activeMeal, activeType, activeTag]);
 
   const filtered = recipes.filter((r) => {
     if (activeMeal && r.meal !== activeMeal) return false;
@@ -46,6 +53,10 @@ export function RecipeListPage() {
     }
     return true;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const page = Math.min(currentPage, totalPages);
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const searchFiltered = q
     ? recipes.filter((r) => {
@@ -185,13 +196,38 @@ export function RecipeListPage() {
         {filtered.length === 0 ? (
           <p className={styles['recipes__empty']}>Inga recept hittades.</p>
         ) : (
-          <ul className={styles['recipes__grid']}>
-            {filtered.map((recipe) => (
-              <li key={recipe.slug}>
-                <RecipeCard recipe={recipe} />
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className={styles['recipes__grid']}>
+              {paginated.map((recipe) => (
+                <li key={recipe.slug}>
+                  <RecipeCard recipe={recipe} />
+                </li>
+              ))}
+            </ul>
+            {totalPages > 1 && (
+              <nav aria-label="Sidnavigering" className={styles['recipes__pagination']}>
+                <button
+                  className={styles['recipes__pagination-btn']}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                  disabled={page === 1}
+                  aria-label="Föregående sida"
+                >
+                  ←
+                </button>
+                <span className={styles['recipes__pagination-info']}>
+                  {page} / {totalPages}
+                </span>
+                <button
+                  className={styles['recipes__pagination-btn']}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                  disabled={page === totalPages}
+                  aria-label="Nästa sida"
+                >
+                  →
+                </button>
+              </nav>
+            )}
+          </>
         )}
       </section>
     </main>

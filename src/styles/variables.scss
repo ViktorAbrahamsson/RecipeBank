@@ -5,7 +5,8 @@
   --color-border: #e8e5e0;
   --color-text: #1a1a18;
   --color-muted: #6b6860;
-  --color-accent: #0284c7;
+  --color-accent: #0369a1;      // was #0284c7 — darkened for 5.9:1 contrast on white
+  --pill-active-text: #ffffff;
 }
 
 // Dark mode
@@ -16,6 +17,7 @@
   --color-text: #e2e0db;
   --color-muted: #8a8895;
   --color-accent: #38bdf8;
+  --pill-active-text: #0f1117;  // dark text on bright cyan — 8.9:1 contrast
 }
 
 // SCSS aliases — components use these without knowing about CSS custom properties
@@ -26,8 +28,8 @@ $color-text: var(--color-text);
 $color-muted: var(--color-muted);
 $color-accent: var(--color-accent);
 
-$font-sans: 'Georgia', serif;
-$font-ui: system-ui, -apple-system, sans-serif;
+$font-sans: 'Montserrat', system-ui, sans-serif;
+$font-ui: 'Inter', system-ui, -apple-system, sans-serif;
 
 $max-width: 1100px;
 $spacing-page: 2rem;
