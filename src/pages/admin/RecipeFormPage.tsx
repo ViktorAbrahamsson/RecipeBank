@@ -25,7 +25,9 @@ export function RecipeFormPage() {
 
   async function handleSave(data: Omit<Recipe, 'id' | 'created_at' | 'updated_at'>): Promise<string | null> {
     setSaving(true);
-    const { error } = await supabase.from('recipes').upsert(data, { onConflict: 'slug' });
+    const { error } = isEdit
+      ? await supabase.from('recipes').update(data).eq('slug', slug!)
+      : await supabase.from('recipes').insert(data);
     setSaving(false);
     if (error) {
       if (error.code === '23505') return 'En slug med detta namn finns redan.';

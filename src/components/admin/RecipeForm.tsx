@@ -76,17 +76,17 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
     const err = await onSave({
       slug: form.slug,
       title: form.title,
-      meal: form.meal || undefined,
-      type: form.type || undefined,
+      meal: form.meal || null,
+      type: form.type || null,
       servings: parseInt(form.servings, 10),
       prep_time: form.prep_time,
-      author: form.author || undefined,
-      description: form.description || undefined,
-      image: form.image || undefined,
-      source: form.source || undefined,
+      author: form.author || null,
+      description: form.description || null,
+      image: form.image || null,
+      source: form.source || null,
       tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
       content: form.content,
-    } as Omit<Recipe, 'id' | 'created_at' | 'updated_at'>);
+    } as unknown as Omit<Recipe, 'id' | 'created_at' | 'updated_at'>);
     if (err) setError(err);
   }
 
