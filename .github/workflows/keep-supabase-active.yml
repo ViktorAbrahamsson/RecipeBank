@@ -11,8 +11,8 @@ jobs:
       - name: Ping Supabase
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${{ secrets.VITE_SUPABASE_URL }}/rest/v1/recipes?limit=1" \
-            -H "apikey: ${{ secrets.VITE_SUPABASE_ANON_KEY }}")
+            "${{ vars.VITE_SUPABASE_URL }}/rest/v1/recipes?limit=1" \
+            -H "apikey: ${{ vars.VITE_SUPABASE_ANON_KEY }}")
           echo "Status: $STATUS"
           if [ "$STATUS" != "200" ]; then
             echo "Unexpected status $STATUS"
