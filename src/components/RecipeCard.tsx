@@ -1,13 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Recipe } from '../types/recipe';
+import { recipeImageUrl } from '../utils/imageUrl';
 import styles from './RecipeCard.module.scss';
 
 interface Props {
   recipe: Recipe;
-}
-
-function recipeImageUrl(filename: string): string {
-  return `${import.meta.env.BASE_URL}images/recipes/${filename}`;
 }
 
 export function RecipeCard({ recipe }: Props) {

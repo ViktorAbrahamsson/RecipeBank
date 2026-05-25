@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { loadRecipes, getAllMeals, getAllTypes, getAllTags } from '../utils/loadRecipes';
+import { useState, useEffect, useMemo } from 'react';
+import { loadRecipes } from '../utils/loadRecipes';
+import { Recipe } from '../types/recipe';
 import { RecipeCard } from '../components/RecipeCard';
 import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeListPage.module.scss';
@@ -7,10 +8,9 @@ import styles from './RecipeListPage.module.scss';
 const PAGE_SIZE = 9;
 
 export function RecipeListPage() {
-  const recipes = loadRecipes();
-  const allMeals = getAllMeals();
-  const allTypes = getAllTypes();
-  const allTags = getAllTags();
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeMeal, setActiveMeal] = useState<string | null>(null);
@@ -18,16 +18,38 @@ export function RecipeListPage() {
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const q = searchQuery.toLowerCase().trim();
-  const hasActiveFilter = q !== '' || activeMeal !== null || activeType !== null || activeTag !== null;
-
   useEffect(() => {
     document.title = 'Receptvalvet – Familjens receptsamling';
   }, []);
 
   useEffect(() => {
+    loadRecipes()
+      .then(setRecipes)
+      .catch(() => setError('Kunde inte ladda recept.'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, activeMeal, activeType, activeTag]);
+
+  const allMeals = useMemo(() => {
+    const meals = recipes.map((r) => r.meal).filter(Boolean) as string[];
+    return [...new Set(meals)].sort();
+  }, [recipes]);
+
+  const allTypes = useMemo(() => {
+    const types = recipes.map((r) => r.type).filter(Boolean) as string[];
+    return [...new Set(types)].sort();
+  }, [recipes]);
+
+  const allTags = useMemo(() => {
+    const tags = recipes.flatMap((r) => r.tags ?? []);
+    return [...new Set(tags)].sort();
+  }, [recipes]);
+
+  const q = searchQuery.toLowerCase().trim();
+  const hasActiveFilter = q !== '' || activeMeal !== null || activeType !== null || activeTag !== null;
 
   const filtered = recipes.filter((r) => {
     if (activeMeal && r.meal !== activeMeal) return false;
@@ -173,11 +195,17 @@ export function RecipeListPage() {
 
       <section aria-label="Recept">
         <p className="sr-only" aria-live="polite" aria-atomic="true">
-          {filtered.length === 0
-            ? 'Inga recept hittades.'
-            : `${filtered.length} recept hittade${filtered.length === 1 ? 's' : ''}.`}
+          {loading
+            ? 'Laddar recept…'
+            : filtered.length === 0
+              ? 'Inga recept hittades.'
+              : `${filtered.length} recept hittade${filtered.length === 1 ? 's' : ''}.`}
         </p>
-        {filtered.length === 0 ? (
+        {loading ? (
+          <p className={styles['recipes__empty']}>Laddar recept…</p>
+        ) : error ? (
+          <p className={styles['recipes__empty']}>{error}</p>
+        ) : filtered.length === 0 ? (
           <p className={styles['recipes__empty']}>Inga recept hittades.</p>
         ) : (
           <>

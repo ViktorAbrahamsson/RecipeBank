@@ -1,8 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getRecipeBySlug } from '../utils/loadRecipes';
+import { recipeImageUrl } from '../utils/imageUrl';
+import { Recipe } from '../types/recipe';
 import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeDetailPage.module.scss';
 
@@ -13,13 +15,17 @@ function toPT(s: string): string | undefined {
   return 'PT' + (h ? h[1] + 'H' : '') + (m ? m[1] + 'M' : '');
 }
 
-function recipeImageUrl(filename: string): string {
-  return `${import.meta.env.BASE_URL}images/recipes/${filename}`;
-}
-
 export function RecipeDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const recipe = slug ? getRecipeBySlug(slug) : undefined;
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!slug) { setLoading(false); return; }
+    getRecipeBySlug(slug)
+      .then(setRecipe)
+      .finally(() => setLoading(false));
+  }, [slug]);
 
   useEffect(() => {
     document.title = recipe
@@ -35,7 +41,7 @@ export function RecipeDetailPage() {
       name: recipe.title,
       url: window.location.href,
       ...(recipe.description && { description: recipe.description }),
-      ...(recipe.image && { image: [`${window.location.origin}/images/recipes/${recipe.image}`] }),
+      ...(recipe.image && { image: [recipeImageUrl(recipe.image)] }),
       ...(recipe.author && { author: { '@type': 'Person', name: recipe.author } }),
       ...(recipe.servings && { recipeYield: String(recipe.servings) }),
       ...(recipe.prep_time && { prepTime: toPT(recipe.prep_time) }),
@@ -49,6 +55,24 @@ export function RecipeDetailPage() {
     document.head.appendChild(script);
     return () => { document.getElementById('recipe-jsonld')?.remove(); };
   }, [recipe]);
+
+  if (loading) {
+    return (
+      <main id="main-content" className={styles.recipe}>
+        <div className={styles['recipe__topbar']}>
+          <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
+            <Link to="/"><span aria-hidden="true">← </span>Alla recept</Link>
+          </nav>
+          <ThemeToggle />
+        </div>
+        <article>
+          <figure className={styles['recipe__hero']}>
+            <div className={styles['recipe__hero-placeholder']} aria-hidden="true" />
+          </figure>
+        </article>
+      </main>
+    );
+  }
 
   if (!recipe) {
     return (

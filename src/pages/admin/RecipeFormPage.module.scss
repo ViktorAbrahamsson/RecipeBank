@@ -1,0 +1,32 @@
+@use '../../styles/variables' as *;
+
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem $spacing-page;
+  background: $color-bg;
+  min-height: 100vh;
+}
+
+.page__header {
+  margin-bottom: 2rem;
+}
+
+.page__back {
+  font-family: $font-ui;
+  font-size: 0.875rem;
+  color: $color-muted;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+
+  &:hover { color: $color-accent; }
+}
+
+.page__title {
+  font-family: $font-sans;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0;
+}
