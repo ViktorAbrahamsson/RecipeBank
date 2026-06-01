@@ -94,6 +94,12 @@
   font-weight: 500;
 }
 
+.admin__table-meta {
+  color: $color-muted;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
 .admin__table-actions {
   display: flex;
   gap: 0.5rem;

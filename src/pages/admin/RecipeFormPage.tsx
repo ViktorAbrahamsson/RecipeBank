@@ -23,11 +23,16 @@ export function RecipeFormPage() {
     });
   }, [slug]);
 
-  async function handleSave(data: Omit<Recipe, 'id' | 'created_at' | 'updated_at'>): Promise<string | null> {
+  async function handleSave(data: Omit<Recipe, 'id' | 'created_at' | 'updated_at' | 'created_by'>): Promise<string | null> {
     setSaving(true);
+    let insertPayload = data;
+    if (!isEdit) {
+      const { data: { user } } = await supabase.auth.getUser();
+      insertPayload = { ...data, created_by: user?.email ?? null } as typeof data;
+    }
     const { error } = isEdit
       ? await supabase.from('recipes').update(data).eq('slug', slug!)
-      : await supabase.from('recipes').insert(data);
+      : await supabase.from('recipes').insert(insertPayload);
     setSaving(false);
     if (error) {
       if (error.code === '23505') return 'En slug med detta namn finns redan.';

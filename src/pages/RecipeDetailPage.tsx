@@ -6,7 +6,9 @@ import { getRecipeBySlug } from '../utils/loadRecipes';
 import { recipeImageUrl } from '../utils/imageUrl';
 import { Recipe } from '../types/recipe';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { ClockIcon, UtensilsIcon } from '../components/Icons';
 import { injectTimers } from '../components/TimerButton';
+import { RelatedRecipes } from '../components/RelatedRecipes';
 import styles from './RecipeDetailPage.module.scss';
 
 function extractYouTubeId(url: string): string | null {
@@ -133,12 +135,13 @@ export function RecipeDetailPage() {
         <div className={styles['recipe__topbar']}>
           <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
             <Link to="/">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{verticalAlign: 'middle', marginBottom: '1px'}}>
-              <path d="M8.5 10.5L4 6.5L8.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            {' '}Alla recept
-          </Link>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{verticalAlign: 'middle', marginBottom: '1px'}}>
+                <path d="M8.5 10.5L4 6.5L8.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {' '}Alla recept
+            </Link>
           </nav>
+          <Link to="/" className={styles['recipe__brand']}>Receptvalvet</Link>
           <ThemeToggle />
         </div>
         <article>
@@ -169,6 +172,7 @@ export function RecipeDetailPage() {
             {' '}Alla recept
           </Link>
         </nav>
+        <Link to="/" className={styles['recipe__brand']}>Receptvalvet</Link>
         <ThemeToggle />
       </div>
 
@@ -193,7 +197,7 @@ export function RecipeDetailPage() {
             return (
               <div className={styles['recipe__video']}>
                 <iframe
-                  src={`https://www.youtube.com/embed/${ytId}`}
+                  src={`https://www.youtube-nocookie.com/embed/${ytId}`}
                   title="Video"
                   allowFullScreen
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -221,8 +225,8 @@ export function RecipeDetailPage() {
           )}
           <h1>{recipe.title}</h1>
           <ul className={styles['recipe__meta']}>
-            <li><span className="sr-only">Portioner: </span>{recipe.servings} portioner</li>
-            <li><span className="sr-only">Tillagningstid: </span>{recipe.prep_time}</li>
+            <li><UtensilsIcon /><span className="sr-only">Portioner: </span>{recipe.servings} {recipe.servings === 1 ? 'portion' : 'portioner'}</li>
+            <li><ClockIcon /><span className="sr-only">Tillagningstid: </span>{recipe.prep_time}</li>
             {recipe.author && <li><span className="sr-only">Av: </span>{recipe.author}</li>}
           </ul>
           {recipe.description && <p className={styles['recipe__description']}>{recipe.description}</p>}
@@ -258,6 +262,8 @@ export function RecipeDetailPage() {
           </StepCtx.Provider>
         </section>
       </article>
+
+      <RelatedRecipes meals={recipe.meal ?? []} currentSlug={recipe.slug} />
     </main>
   );
 }

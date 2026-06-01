@@ -15,4 +15,6 @@ export interface RecipeMeta {
 export interface Recipe extends RecipeMeta {
   slug: string;
   content: string;
+  created_by?: string;
+  updated_at?: string;
 }

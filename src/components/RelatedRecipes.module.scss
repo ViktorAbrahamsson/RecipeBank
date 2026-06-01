@@ -1,0 +1,129 @@
+@use '../styles/variables' as *;
+
+.related {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid $color-border;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 $spacing-page 1rem;
+  }
+
+  &__heading {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: $font-sans;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $color-muted;
+  }
+
+  // Controls inside the header — visible only on mobile
+  &__header-controls {
+    display: flex;
+    gap: 0.5rem;
+
+    @media (min-width: 860px) {
+      display: none;
+    }
+  }
+
+  &__slider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 $spacing-page;
+
+    @media (min-width: 860px) {
+      padding: 0 1rem;
+    }
+  }
+
+  // Side buttons that flank the track — visible only on desktop
+  &__side-btn {
+    display: none !important;
+
+    @media (min-width: 860px) {
+      display: flex !important;
+    }
+  }
+
+  &__btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1.5px solid $color-accent;
+    border-radius: 6px;
+    background: none;
+    color: $color-accent;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+
+    &:hover:not(:disabled) {
+      background-color: $color-accent;
+      color: var(--pill-active-text);
+    }
+
+    &:disabled {
+      opacity: 0.28;
+      cursor: default;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-accent;
+      outline-offset: 2px;
+    }
+  }
+
+  &__track {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.25rem 0 1.75rem;
+    scrollbar-width: none;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__item {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    transition: opacity 0.3s ease;
+    // Mobile: full width
+    width: 100%;
+
+    @media (min-width: 560px) {
+      // Tablet: 2 cards + peek
+      width: calc((100% - 2rem - 30px) / 2);
+    }
+
+    @media (min-width: 860px) {
+      // Desktop: 3 cards + peek
+      width: calc((100% - 3rem - 40px) / 3);
+    }
+
+    &--dim {
+      opacity: 0.3;
+    }
+  }
+}

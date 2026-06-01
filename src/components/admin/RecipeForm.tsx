@@ -34,7 +34,7 @@ interface FormState {
 
 interface Props {
   initial?: Recipe;
-  onSave: (data: Omit<Recipe, 'id' | 'created_at' | 'updated_at'>) => Promise<string | null>;
+  onSave: (data: Omit<Recipe, 'id' | 'created_at' | 'updated_at' | 'created_by'>) => Promise<string | null>;
   saving: boolean;
 }
 
@@ -202,7 +202,7 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
       <div className={styles['form__field']}>
         <div className={styles['form__content-header']}>
           <div className={styles['form__content-label-group']}>
-            <label htmlFor="rf-content" className={styles['form__label']}>Innehåll (Markdown) *</label>
+            <label htmlFor="rf-content" className={styles['form__label']}>Innehåll (Markdown)</label>
             <button
               type="button"
               className={styles['form__tips-btn']}
@@ -277,7 +277,6 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
         ) : (
           <textarea
             id="rf-content"
-            required
             className={styles['form__textarea']}
             value={form.content}
             onChange={(e) => set('content', e.target.value)}

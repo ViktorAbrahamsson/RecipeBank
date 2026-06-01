@@ -30,6 +30,11 @@
     font-weight: 600;
     color: #e2e0db;
     letter-spacing: -0.01em;
+    text-decoration: none;
+
+    &:hover {
+      color: #ffffff;
+    }
 
     svg {
       flex-shrink: 0;

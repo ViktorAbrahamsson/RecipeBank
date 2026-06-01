@@ -7,6 +7,16 @@ import styles from './RecipeListAdminPage.module.scss';
 
 type SortKey = 'newest' | 'oldest' | 'title_asc' | 'title_desc' | 'prep_asc' | 'prep_desc';
 
+function formatDate(iso: string): string {
+  return new Intl.DateTimeFormat('sv-SE', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(iso));
+}
+
 function parsePrepTime(prep: string): number {
   const h = prep.match(/(\d+)\s*h/);
   const m = prep.match(/(\d+)\s*min/);
@@ -155,8 +165,8 @@ export function RecipeListAdminPage() {
             <thead>
               <tr>
                 <th>Titel</th>
-                <th>Måltid</th>
-                <th>Portioner</th>
+                <th>Skapat av</th>
+                <th>Senast redigerad</th>
                 <th aria-label="Åtgärder"></th>
               </tr>
             </thead>
@@ -164,8 +174,8 @@ export function RecipeListAdminPage() {
               {sorted.map((recipe) => (
                 <tr key={recipe.slug}>
                   <td className={styles['admin__table-title']}>{recipe.title}</td>
-                  <td>{recipe.meal?.join(' ') ?? '–'}</td>
-                  <td>{recipe.servings}</td>
+                  <td className={styles['admin__table-meta']}>{recipe.created_by ?? '–'}</td>
+                  <td className={styles['admin__table-meta']}>{recipe.updated_at ? formatDate(recipe.updated_at) : '–'}</td>
                   <td className={styles['admin__table-actions']}>
                     <Link
                       to={`/admin/redigera/${recipe.slug}`}

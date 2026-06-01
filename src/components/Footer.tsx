@@ -19,10 +19,10 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles['footer__inner']}>
         <div className={styles['footer__brand']}>
-          <span className={styles['footer__logo']}>
+          <Link to="/" className={styles['footer__logo']}>
             <ForkIcon />
             Receptvalvet
-          </span>
+          </Link>
           <p className={styles['footer__tagline']}>
             En plats för familjens recept - sparade för att delas.
           </p>
