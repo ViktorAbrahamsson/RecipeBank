@@ -2,6 +2,7 @@
 
 .recipe {
   max-width: 720px;
+  width: 100%;
   margin: 0 auto;
   padding: $spacing-page;
 
@@ -15,12 +16,21 @@
   &__breadcrumb {
 
     a {
-      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.85rem;
+      border: 1.5px solid $color-accent;
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      font-weight: 600;
       text-decoration: none;
-      color: $color-muted;
+      color: $color-accent;
+      transition: background-color 0.15s, color 0.15s;
 
       &:hover {
-        color: $color-accent;
+        background-color: $color-accent;
+        color: var(--pill-active-text);
       }
     }
   }
@@ -139,6 +149,19 @@
 
       &:hover {
         color: $color-accent;
+      }
+    }
+  }
+
+  &__instagram {
+    margin: 0.75rem 0 0;
+    font-size: 0.8125rem;
+
+    a {
+      color: $color-accent;
+
+      &:hover {
+        text-decoration: underline;
       }
     }
   }

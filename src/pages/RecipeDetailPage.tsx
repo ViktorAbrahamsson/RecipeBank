@@ -97,7 +97,7 @@ export function RecipeDetailPage() {
       </div>
 
       <article>
-        {!recipe.video_url && (
+        {(!recipe.video_url || recipe.video_url.includes('instagram.com')) && (
           <figure className={styles['recipe__hero']}>
             {recipe.image ? (
               <img
@@ -111,9 +111,8 @@ export function RecipeDetailPage() {
           </figure>
         )}
 
-        {recipe.video_url && (() => {
+        {recipe.video_url && !recipe.video_url.includes('instagram.com') && (() => {
           const ytId = extractYouTubeId(recipe.video_url);
-          const isInstagram = recipe.video_url.includes('instagram.com');
           if (ytId) {
             return (
               <div className={styles['recipe__video']}>
@@ -128,9 +127,7 @@ export function RecipeDetailPage() {
           }
           return (
             <p className={styles['recipe__video-link']}>
-              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">
-                {isInstagram ? 'Se video på Instagram ↗' : 'Se video ↗'}
-              </a>
+              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">Se video ↗</a>
             </p>
           );
         })()}
@@ -158,6 +155,11 @@ export function RecipeDetailPage() {
           {recipe.source && (
             <p className={styles['recipe__source']}>
               Källa: <a href={recipe.source} target="_blank" rel="noopener noreferrer">{recipe.source}</a>
+            </p>
+          )}
+          {recipe.video_url?.includes('instagram.com') && (
+            <p className={styles['recipe__instagram']}>
+              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">Se video på Instagram ↗</a>
             </p>
           )}
         </header>

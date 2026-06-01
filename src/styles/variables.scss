@@ -11,13 +11,13 @@
 
 // Dark mode
 [data-theme='dark'] {
-  --color-bg: #0f1117;
-  --color-surface: #1a1d2e;
-  --color-border: #252836;
+  --color-bg: #080808;
+  --color-surface: #161616;
+  --color-border: #252525;
   --color-text: #e2e0db;
   --color-muted: #8a8895;
   --color-accent: #38bdf8;
-  --pill-active-text: #0f1117;  // dark text on bright cyan — 8.9:1 contrast
+  --pill-active-text: #080808;  // dark text on bright cyan — 8.9:1 contrast
 }
 
 // SCSS aliases — components use these without knowing about CSS custom properties

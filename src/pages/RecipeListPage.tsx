@@ -7,6 +7,14 @@ import styles from './RecipeListPage.module.scss';
 
 const PAGE_SIZE = 9;
 
+type SortKey = 'newest' | 'oldest' | 'title_asc' | 'title_desc' | 'prep_asc' | 'prep_desc';
+
+function parsePrepTime(prep: string): number {
+  const h = prep.match(/(\d+)\s*h/);
+  const m = prep.match(/(\d+)\s*min/);
+  return (h ? parseInt(h[1]) * 60 : 0) + (m ? parseInt(m[1]) : 0);
+}
+
 export function RecipeListPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +23,7 @@ export function RecipeListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeMeal, setActiveMeal] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortKey>('newest');
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -30,7 +39,7 @@ export function RecipeListPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, activeMeal, activeTag]);
+  }, [searchQuery, activeMeal, activeTag, sortBy]);
 
   const MEAL_ORDER = ['Frukost', 'Lunch', 'Tillbehör', 'Fika', 'Kvällsmat', 'Efterrätt', 'Snack'];
   const allMeals = useMemo(() => {
@@ -47,8 +56,8 @@ export function RecipeListPage() {
   }, [recipes]);
 
   const allTags = useMemo(() => {
-    const tags = recipes.flatMap((r) => r.tags ?? []);
-    return [...new Set(tags)].sort();
+    const tags = recipes.flatMap((r) => r.tags ?? []).map((t) => t.toLowerCase());
+    return [...new Set(tags)].sort((a, b) => a.localeCompare(b, 'sv'));
   }, [recipes]);
 
   const q = searchQuery.toLowerCase().trim();
@@ -56,26 +65,36 @@ export function RecipeListPage() {
 
   const filtered = recipes.filter((r) => {
     if (activeMeal && !r.meal?.includes(activeMeal)) return false;
-    if (activeTag && !r.tags?.includes(activeTag)) return false;
+    if (activeTag && !r.tags?.map((t) => t.toLowerCase()).includes(activeTag)) return false;
     if (q) {
       const inTitle = r.title.toLowerCase().includes(q);
       const inTags = r.tags?.some((t) => t.toLowerCase().includes(q)) ?? false;
       const inMeal = r.meal?.some((m) => m.toLowerCase().includes(q)) ?? false;
-      if (!inTitle && !inTags && !inMeal) return false;
+      const inAuthor = r.author?.toLowerCase().includes(q) ?? false;
+      if (!inTitle && !inTags && !inMeal && !inAuthor) return false;
     }
     return true;
   });
 
+  const sorted: Recipe[] =
+    sortBy === 'oldest' ? [...filtered].reverse() :
+    sortBy === 'title_asc' ? [...filtered].sort((a, b) => a.title.localeCompare(b.title, 'sv')) :
+    sortBy === 'title_desc' ? [...filtered].sort((a, b) => b.title.localeCompare(a.title, 'sv')) :
+    sortBy === 'prep_asc' ? [...filtered].sort((a, b) => parsePrepTime(a.prep_time) - parsePrepTime(b.prep_time)) :
+    sortBy === 'prep_desc' ? [...filtered].sort((a, b) => parsePrepTime(b.prep_time) - parsePrepTime(a.prep_time)) :
+    filtered;
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const page = Math.min(currentPage, totalPages);
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const searchFiltered = q
     ? recipes.filter((r) => {
         const inTitle = r.title.toLowerCase().includes(q);
         const inTags = r.tags?.some((t) => t.toLowerCase().includes(q)) ?? false;
         const inMeal = r.meal?.some((m) => m.toLowerCase().includes(q)) ?? false;
-        return inTitle || inTags || inMeal;
+        const inAuthor = r.author?.toLowerCase().includes(q) ?? false;
+        return inTitle || inTags || inMeal || inAuthor;
       })
     : recipes;
 
@@ -87,7 +106,7 @@ export function RecipeListPage() {
   const availableTags = new Set(
     searchFiltered
       .filter((r) => !activeMeal || r.meal?.includes(activeMeal))
-      .flatMap((r) => r.tags ?? [])
+      .flatMap((r) => r.tags?.map((t) => t.toLowerCase()) ?? [])
   );
 
   function clearAll() {
@@ -148,6 +167,22 @@ export function RecipeListPage() {
         </search>
 
         <div className={styles['toolbar__filters']}>
+          <div className={styles['toolbar__select-wrapper']}>
+            <label htmlFor="sort-by" className="sr-only">Sortera</label>
+            <select
+              id="sort-by"
+              className={`${styles['toolbar__select']} ${sortBy !== 'newest' ? styles['toolbar__select--active'] : ''}`}
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortKey)}
+            >
+              <option value="newest">Nyast</option>
+              <option value="oldest">Äldst</option>
+              <option value="title_asc">Titel A–Ö</option>
+              <option value="title_desc">Titel Ö–A</option>
+              <option value="prep_asc">Tid: kortast</option>
+              <option value="prep_desc">Tid: längst</option>
+            </select>
+          </div>
           <FilterSelect
             id="filter-maltid"
             label="Måltid"
