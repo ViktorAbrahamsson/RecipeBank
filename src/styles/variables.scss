@@ -7,6 +7,8 @@
   --color-muted: #6b6860;
   --color-accent: #0369a1;      // was #0284c7 — darkened for 5.9:1 contrast on white
   --pill-active-text: #ffffff;
+  --skeleton-base: #ede9e4;
+  --skeleton-shimmer: #f7f5f2;
 }
 
 // Dark mode
@@ -18,6 +20,8 @@
   --color-muted: #8a8895;
   --color-accent: #38bdf8;
   --pill-active-text: #080808;  // dark text on bright cyan — 8.9:1 contrast
+  --skeleton-base: #1e1e1e;
+  --skeleton-shimmer: #2a2a2a;
 }
 
 // SCSS aliases — components use these without knowing about CSS custom properties

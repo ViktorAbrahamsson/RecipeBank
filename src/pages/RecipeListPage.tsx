@@ -15,6 +15,26 @@ function parsePrepTime(prep: string): number {
   return (h ? parseInt(h[1]) * 60 : 0) + (m ? parseInt(m[1]) : 0);
 }
 
+function RecipeCardSkeleton({ index }: { index: number }) {
+  const delay = `${index * 0.07}s`;
+  const lineStyle = { animationDelay: delay };
+  return (
+    <div className={styles['skeleton__card']} aria-hidden="true" style={{ animationDelay: delay }}>
+      <div className={styles['skeleton__image']} style={lineStyle} />
+      <div className={styles['skeleton__body']}>
+        <div className={`${styles['skeleton__line']} ${styles['skeleton__line--short']}`} style={lineStyle} />
+        <div className={`${styles['skeleton__line']} ${styles['skeleton__line--title']}`} style={lineStyle} />
+        <div className={styles['skeleton__meta']}>
+          <div className={`${styles['skeleton__line']} ${styles['skeleton__line--meta']}`} style={lineStyle} />
+          <div className={`${styles['skeleton__line']} ${styles['skeleton__line--meta']}`} style={lineStyle} />
+        </div>
+        <div className={styles['skeleton__line']} style={lineStyle} />
+        <div className={`${styles['skeleton__line']} ${styles['skeleton__line--medium']}`} style={lineStyle} />
+      </div>
+    </div>
+  );
+}
+
 export function RecipeListPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
@@ -222,7 +242,11 @@ export function RecipeListPage() {
               : `${filtered.length} recept hittade${filtered.length === 1 ? 's' : ''}.`}
         </p>
         {loading ? (
-          <p className={styles['recipes__empty']}>Laddar recept…</p>
+          <ul className={styles['recipes__grid']} aria-hidden="true">
+            {Array.from({ length: PAGE_SIZE }, (_, i) => (
+              <li key={i}><RecipeCardSkeleton index={i} /></li>
+            ))}
+          </ul>
         ) : error ? (
           <p className={styles['recipes__empty']}>{error}</p>
         ) : filtered.length === 0 ? (
@@ -243,14 +267,22 @@ export function RecipeListPage() {
                   onClick={() => setCurrentPage((p) => p - 1)}
                   disabled={page === 1}
                   aria-label="Föregående sida"
-                >←</button>
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
                 <span className={styles['recipes__pagination-info']}>{page} / {totalPages}</span>
                 <button
                   className={styles['recipes__pagination-btn']}
                   onClick={() => setCurrentPage((p) => p + 1)}
                   disabled={page === totalPages}
                   aria-label="Nästa sida"
-                >→</button>
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
               </nav>
             )}
           </>

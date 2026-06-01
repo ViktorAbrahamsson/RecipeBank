@@ -2,6 +2,7 @@
 
 .admin {
   max-width: 960px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem $spacing-page;
   background: $color-bg;
@@ -97,6 +98,69 @@
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+}
+
+.admin__toolbar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.admin__search {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  background: $color-surface;
+  color: $color-text;
+  font-family: $font-ui;
+  font-size: 0.875rem;
+  outline: none;
+
+  &:focus { border-color: $color-accent; }
+}
+
+.admin__toolbar-selects {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin__select {
+  padding: 0.45rem 0.65rem;
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  background: $color-surface;
+  color: $color-text;
+  font-family: $font-ui;
+  font-size: 0.875rem;
+  cursor: pointer;
+  outline: none;
+
+  &:focus { border-color: $color-accent; }
+}
+
+.admin__select--active {
+  border-color: $color-accent;
+  color: $color-accent;
+}
+
+.admin__toolbar-clear {
+  background: transparent;
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.8rem;
+  color: $color-muted;
+  cursor: pointer;
+  line-height: 1;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover { border-color: $color-accent; color: $color-accent; }
 }
 
 .admin__btn-primary {

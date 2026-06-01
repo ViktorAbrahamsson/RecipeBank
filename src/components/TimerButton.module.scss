@@ -1,0 +1,100 @@
+@use '../styles/variables' as *;
+
+.timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border: 1.5px dashed $color-accent;
+  border-radius: 999px;
+  background: transparent;
+  color: $color-accent;
+  font: inherit;
+  font-size: 0.85em;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  vertical-align: baseline;
+  white-space: nowrap;
+  transition: background-color 0.15s, color 0.15s, border-style 0.15s;
+
+  &:hover {
+    background-color: $color-accent;
+    color: var(--pill-active-text);
+    border-style: solid;
+  }
+
+  &--running {
+    background-color: $color-accent;
+    border-color: $color-accent;
+    border-style: solid;
+    color: var(--pill-active-text);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    cursor: default;
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: inherit;
+      opacity: 0.7;
+      font-size: 1.1em;
+      line-height: 1;
+      padding: 0 0 0 0.1rem;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  &--paused {
+    background: transparent;
+    border-style: solid;
+    border-color: $color-accent;
+    color: $color-accent;
+    font-variant-numeric: tabular-nums;
+    cursor: default;
+    opacity: 0.75;
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: $color-accent;
+      opacity: 0.75;
+      font-size: 0.9em;
+      line-height: 1;
+      padding: 0 0 0 0.1rem;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  &--done {
+    background: transparent;
+    border-style: solid;
+    border-color: $color-border;
+    color: $color-muted;
+    cursor: default;
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: $color-muted;
+      font-size: 1.1em;
+      line-height: 1;
+      padding: 0 0 0 0.1rem;
+      opacity: 0.6;
+
+      &:hover {
+        opacity: 1;
+        color: $color-text;
+      }
+    }
+  }
+}

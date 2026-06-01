@@ -1,11 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useContext, createContext } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getRecipeBySlug } from '../utils/loadRecipes';
 import { recipeImageUrl } from '../utils/imageUrl';
 import { Recipe } from '../types/recipe';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { injectTimers } from '../components/TimerButton';
 import styles from './RecipeDetailPage.module.scss';
 
 function extractYouTubeId(url: string): string | null {
@@ -20,16 +21,81 @@ function toPT(s: string): string | undefined {
   return 'PT' + (h ? h[1] + 'H' : '') + (m ? m[1] + 'M' : '');
 }
 
+const OrderedListCtx = createContext(false);
+
+type StepCtxType = { checkedSteps: Set<number>; toggleStep: (line: number) => void };
+const StepCtx = createContext<StepCtxType>({ checkedSteps: new Set(), toggleStep: () => {} });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MdExtraProps = { node?: any; ordered?: boolean };
+
+function StepListItem({ children, node, ordered: _ordered, ...props }: React.ComponentPropsWithoutRef<'li'> & MdExtraProps) {
+  const isOrdered = useContext(OrderedListCtx);
+  const { checkedSteps, toggleStep } = useContext(StepCtx);
+
+  if (!isOrdered) return <li {...props}>{children}</li>;
+
+  const line: number = node?.position?.start?.line ?? -1;
+  const checked = checkedSteps.has(line);
+
+  return (
+    <li
+      className={`${styles['recipe__step']}${checked ? ` ${styles['recipe__step--checked']}` : ''}`}
+      onClick={() => toggleStep(line)}
+      role="checkbox"
+      aria-checked={checked}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          toggleStep(line);
+        }
+      }}
+    >
+      <span className={styles['recipe__step-check']} aria-hidden="true" />
+      <span className={styles['recipe__step-text']}>{injectTimers(children, `step-${line}`, checked)}</span>
+    </li>
+  );
+}
+
+const markdownComponents = {
+  ol: ({ children, node, ordered: _ordered, ...props }: React.ComponentPropsWithoutRef<'ol'> & MdExtraProps) => (
+    <OrderedListCtx.Provider value={true}>
+      <ol {...props}>{children}</ol>
+    </OrderedListCtx.Provider>
+  ),
+  ul: ({ children, node, ordered: _ordered, ...props }: React.ComponentPropsWithoutRef<'ul'> & MdExtraProps) => (
+    <OrderedListCtx.Provider value={false}>
+      <ul {...props}>{children}</ul>
+    </OrderedListCtx.Provider>
+  ),
+  li: StepListItem,
+};
+
 export function RecipeDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
+  const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set());
+
+  const toggleStep = useCallback((line: number) => {
+    setCheckedSteps(prev => {
+      const next = new Set(prev);
+      if (next.has(line)) next.delete(line);
+      else next.add(line);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
     getRecipeBySlug(slug)
       .then(setRecipe)
       .finally(() => setLoading(false));
+  }, [slug]);
+
+  useEffect(() => {
+    setCheckedSteps(new Set());
   }, [slug]);
 
   useEffect(() => {
@@ -66,7 +132,12 @@ export function RecipeDetailPage() {
       <main id="main-content" className={styles.recipe}>
         <div className={styles['recipe__topbar']}>
           <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
-            <Link to="/"><span aria-hidden="true">← </span>Alla recept</Link>
+            <Link to="/">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{verticalAlign: 'middle', marginBottom: '1px'}}>
+              <path d="M8.5 10.5L4 6.5L8.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {' '}Alla recept
+          </Link>
           </nav>
           <ThemeToggle />
         </div>
@@ -91,7 +162,12 @@ export function RecipeDetailPage() {
     <main id="main-content" className={styles.recipe}>
       <div className={styles['recipe__topbar']}>
         <nav aria-label="Brödsmulor" className={styles['recipe__breadcrumb']}>
-          <Link to="/"><span aria-hidden="true">← </span>Alla recept</Link>
+          <Link to="/">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{verticalAlign: 'middle', marginBottom: '1px'}}>
+              <path d="M8.5 10.5L4 6.5L8.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {' '}Alla recept
+          </Link>
         </nav>
         <ThemeToggle />
       </div>
@@ -127,7 +203,12 @@ export function RecipeDetailPage() {
           }
           return (
             <p className={styles['recipe__video-link']}>
-              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">Se video ↗</a>
+              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">
+                Se video{' '}
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{verticalAlign: 'middle', marginBottom: '1px'}}>
+                  <path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8M8 1h4m0 0v4m0-4L6 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
             </p>
           );
         })()}
@@ -159,13 +240,22 @@ export function RecipeDetailPage() {
           )}
           {recipe.video_url?.includes('instagram.com') && (
             <p className={styles['recipe__instagram']}>
-              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">Se video på Instagram ↗</a>
+              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">
+                Se video på Instagram{' '}
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{verticalAlign: 'middle', marginBottom: '1px'}}>
+                  <path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8M8 1h4m0 0v4m0-4L6 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
             </p>
           )}
         </header>
 
         <section aria-label="Recept" className={styles['recipe__content']}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{recipe.content}</ReactMarkdown>
+          <StepCtx.Provider value={{ checkedSteps, toggleStep }}>
+            <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+              {recipe.content}
+            </ReactMarkdown>
+          </StepCtx.Provider>
         </section>
       </article>
     </main>

@@ -49,7 +49,12 @@ export function RecipeFormPage() {
   return (
     <main className={styles.page}>
       <header className={styles['page__header']}>
-        <Link to="/admin" className={styles['page__back']}>← Tillbaka</Link>
+        <Link to="/admin" className={styles['page__back']}>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style={{verticalAlign: 'middle', marginBottom: '1px'}}>
+            <path d="M8.5 10.5L4 6.5L8.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          {' '}Tillbaka
+        </Link>
         <h1 className={styles['page__title']}>{isEdit ? 'Redigera recept' : 'Nytt recept'}</h1>
       </header>
       <RecipeForm initial={initial ?? undefined} onSave={handleSave} saving={saving} />

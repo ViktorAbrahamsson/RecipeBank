@@ -1,5 +1,10 @@
 @use '../styles/variables' as *;
 
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
 .recipes {
   width: 100%;
   max-width: $max-width;
@@ -70,17 +75,16 @@
     justify-content: center;
     width: 2.25rem;
     height: 2.25rem;
-    border: 1px solid $color-border;
+    border: 1.5px solid $color-accent;
     border-radius: 6px;
     background: none;
-    color: $color-muted;
-    font-size: 1rem;
+    color: $color-accent;
     cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.15s, color 0.15s;
 
     &:hover:not(:disabled) {
-      border-color: $color-accent;
-      color: $color-accent;
+      background-color: $color-accent;
+      color: var(--pill-active-text);
     }
 
     &:disabled {
@@ -223,5 +227,71 @@
       outline: 2px solid $color-accent;
       outline-offset: 2px;
     }
+  }
+}
+
+$shimmer: linear-gradient(
+  90deg,
+  var(--skeleton-base) 25%,
+  var(--skeleton-shimmer) 50%,
+  var(--skeleton-base) 75%
+);
+
+.skeleton {
+  &__card {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  &__image {
+    width: 100%;
+    height: 150px;
+    background: $shimmer;
+    background-size: 1200px 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+
+  &__line {
+    height: 0.75rem;
+    border-radius: 4px;
+    width: 100%;
+    background: $shimmer;
+    background-size: 1200px 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+
+    &--short {
+      width: 35%;
+      height: 0.6rem;
+    }
+
+    &--title {
+      height: 1.2rem;
+      width: 75%;
+    }
+
+    &--medium {
+      width: 55%;
+    }
+
+    &--meta {
+      width: 4.5rem;
+      height: 0.6rem;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    gap: 1rem;
+    padding: 0.1rem 0;
   }
 }

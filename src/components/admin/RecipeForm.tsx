@@ -42,6 +42,7 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
   const isEdit = !!initial;
   const [slugManual, setSlugManual] = useState(isEdit);
   const [preview, setPreview] = useState(false);
+  const [showTips, setShowTips] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState<FormState>({
@@ -200,11 +201,75 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
 
       <div className={styles['form__field']}>
         <div className={styles['form__content-header']}>
-          <label htmlFor="rf-content" className={styles['form__label']}>Innehåll (Markdown) *</label>
+          <div className={styles['form__content-label-group']}>
+            <label htmlFor="rf-content" className={styles['form__label']}>Innehåll (Markdown) *</label>
+            <button
+              type="button"
+              className={styles['form__tips-btn']}
+              onClick={() => setShowTips(true)}
+              aria-label="Visa tips för Markdown"
+            >
+              ?
+            </button>
+          </div>
           <button type="button" className={styles['form__preview-toggle']} onClick={() => setPreview((p) => !p)}>
             {preview ? 'Redigera' : 'Förhandsgranska'}
           </button>
         </div>
+
+        {showTips && (
+          <div className={styles['form__tips-backdrop']} onClick={() => setShowTips(false)}>
+            <div className={styles['form__tips-modal']} onClick={(e) => e.stopPropagation()}>
+              <div className={styles['form__tips-header']}>
+                <h2 className={styles['form__tips-title']}>Markdown-tips</h2>
+                <button
+                  type="button"
+                  className={styles['form__tips-close']}
+                  onClick={() => setShowTips(false)}
+                  aria-label="Stäng"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className={styles['form__tips-body']}>
+                <section>
+                  <h3>Rekommenderad struktur</h3>
+                  <pre>{`## Ingredienser
+- 400 g kycklingfilé
+- 2 vitlöksklyftor
+- 1 msk olivolja
+- Salt och peppar
+
+## Gör så här
+1. Värm ugnen till 200 °C.
+2. Krydda kycklingen med salt och peppar.
+3. Stek i ugn 25 min tills genomstekt.`}</pre>
+                </section>
+                <section>
+                  <h3>Formatering</h3>
+                  <table>
+                    <tbody>
+                      <tr><td><code>## Rubrik</code></td><td>Stor rubrik (Ingredienser, Gör så här)</td></tr>
+                      <tr><td><code>### Underrubrik</code></td><td>Undergrupp av ingredienser</td></tr>
+                      <tr><td><code>- punkt</code></td><td>Punktlista (ingredienser)</td></tr>
+                      <tr><td><code>1. steg</code></td><td>Numrerad lista (instruktioner)</td></tr>
+                      <tr><td><code>**fet**</code></td><td><strong>Fet text</strong></td></tr>
+                      <tr><td><code>*kursiv*</code></td><td><em>Kursiv text</em></td></tr>
+                    </tbody>
+                  </table>
+                </section>
+                <section>
+                  <h3>Tips</h3>
+                  <ul>
+                    <li>Lämna en blank rad mellan varje sektion.</li>
+                    <li>Skriv mängd före ingrediens: <code>200 g smör</code></li>
+                    <li>Använd <strong>Förhandsgranska</strong> för att se resultatet.</li>
+                  </ul>
+                </section>
+              </div>
+            </div>
+          </div>
+        )}
         {preview ? (
           <div className={styles['form__preview']}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{form.content}</ReactMarkdown>
