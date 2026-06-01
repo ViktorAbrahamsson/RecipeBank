@@ -32,7 +32,7 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
 
 export async function getAllMeals(): Promise<string[]> {
   const recipes = await loadRecipes();
-  const meals = recipes.map((r) => r.meal).filter(Boolean) as string[];
+  const meals = recipes.flatMap((r) => r.meal ?? []);
   return [...new Set(meals)].sort();
 }
 
