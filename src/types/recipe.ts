@@ -1,6 +1,6 @@
 export interface RecipeMeta {
   title: string;
-  meal?: string;
+  meal?: string[];
   type?: string;
   servings: number;
   prep_time: string;
@@ -8,6 +8,7 @@ export interface RecipeMeta {
   description?: string;
   image?: string;
   source?: string;
+  video_url?: string;
   tags?: string[];
 }
 

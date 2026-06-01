@@ -14,7 +14,6 @@ export function RecipeListPage() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeMeal, setActiveMeal] = useState<string | null>(null);
-  const [activeType, setActiveType] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -31,16 +30,20 @@ export function RecipeListPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, activeMeal, activeType, activeTag]);
+  }, [searchQuery, activeMeal, activeTag]);
 
+  const MEAL_ORDER = ['Frukost', 'Lunch', 'Tillbehör', 'Fika', 'Kvällsmat', 'Efterrätt', 'Snack'];
   const allMeals = useMemo(() => {
-    const meals = recipes.map((r) => r.meal).filter(Boolean) as string[];
-    return [...new Set(meals)].sort();
-  }, [recipes]);
-
-  const allTypes = useMemo(() => {
-    const types = recipes.map((r) => r.type).filter(Boolean) as string[];
-    return [...new Set(types)].sort();
+    const meals = recipes.flatMap((r) => r.meal ?? []);
+    const unique = [...new Set(meals)];
+    return unique.sort((a, b) => {
+      const ai = MEAL_ORDER.indexOf(a);
+      const bi = MEAL_ORDER.indexOf(b);
+      if (ai === -1 && bi === -1) return a.localeCompare(b);
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
   }, [recipes]);
 
   const allTags = useMemo(() => {
@@ -49,18 +52,16 @@ export function RecipeListPage() {
   }, [recipes]);
 
   const q = searchQuery.toLowerCase().trim();
-  const hasActiveFilter = q !== '' || activeMeal !== null || activeType !== null || activeTag !== null;
+  const hasActiveFilter = q !== '' || activeMeal !== null || activeTag !== null;
 
   const filtered = recipes.filter((r) => {
-    if (activeMeal && r.meal !== activeMeal) return false;
-    if (activeType && r.type !== activeType) return false;
+    if (activeMeal && !r.meal?.includes(activeMeal)) return false;
     if (activeTag && !r.tags?.includes(activeTag)) return false;
     if (q) {
       const inTitle = r.title.toLowerCase().includes(q);
       const inTags = r.tags?.some((t) => t.toLowerCase().includes(q)) ?? false;
-      const inType = r.type?.toLowerCase().includes(q) ?? false;
-      const inMeal = r.meal?.toLowerCase().includes(q) ?? false;
-      if (!inTitle && !inTags && !inType && !inMeal) return false;
+      const inMeal = r.meal?.some((m) => m.toLowerCase().includes(q)) ?? false;
+      if (!inTitle && !inTags && !inMeal) return false;
     }
     return true;
   });
@@ -73,32 +74,25 @@ export function RecipeListPage() {
     ? recipes.filter((r) => {
         const inTitle = r.title.toLowerCase().includes(q);
         const inTags = r.tags?.some((t) => t.toLowerCase().includes(q)) ?? false;
-        const inType = r.type?.toLowerCase().includes(q) ?? false;
-        const inMeal = r.meal?.toLowerCase().includes(q) ?? false;
-        return inTitle || inTags || inType || inMeal;
+        const inMeal = r.meal?.some((m) => m.toLowerCase().includes(q)) ?? false;
+        return inTitle || inTags || inMeal;
       })
     : recipes;
 
   const availableMeals = new Set(
     searchFiltered
-      .filter((r) => (!activeType || r.type === activeType) && (!activeTag || r.tags?.includes(activeTag)))
-      .map((r) => r.meal).filter(Boolean) as string[]
-  );
-  const availableTypes = new Set(
-    searchFiltered
-      .filter((r) => (!activeMeal || r.meal === activeMeal) && (!activeTag || r.tags?.includes(activeTag)))
-      .map((r) => r.type).filter(Boolean) as string[]
+      .filter((r) => !activeTag || r.tags?.includes(activeTag))
+      .flatMap((r) => r.meal ?? [])
   );
   const availableTags = new Set(
     searchFiltered
-      .filter((r) => (!activeMeal || r.meal === activeMeal) && (!activeType || r.type === activeType))
+      .filter((r) => !activeMeal || r.meal?.includes(activeMeal))
       .flatMap((r) => r.tags ?? [])
   );
 
   function clearAll() {
     setSearchQuery('');
     setActiveMeal(null);
-    setActiveType(null);
     setActiveTag(null);
   }
 
@@ -162,15 +156,6 @@ export function RecipeListPage() {
             available={availableMeals}
             value={activeMeal}
             onChange={setActiveMeal}
-          />
-          <FilterSelect
-            id="filter-typ"
-            label="Typ"
-            defaultLabel="Typ"
-            options={allTypes}
-            available={availableTypes}
-            value={activeType}
-            onChange={setActiveType}
           />
           <FilterSelect
             id="filter-ingredienser"

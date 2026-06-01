@@ -8,6 +8,11 @@ import { Recipe } from '../types/recipe';
 import { ThemeToggle } from '../components/ThemeToggle';
 import styles from './RecipeDetailPage.module.scss';
 
+function extractYouTubeId(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
 function toPT(s: string): string | undefined {
   const h = s.match(/(\d+)\s*h/i);
   const m = s.match(/(\d+)\s*min/i);
@@ -92,22 +97,48 @@ export function RecipeDetailPage() {
       </div>
 
       <article>
-        <figure className={styles['recipe__hero']}>
-          {recipe.image ? (
-            <img
-              src={recipeImageUrl(recipe.image)}
-              alt={recipe.title}
-              className={styles['recipe__hero-image']}
-            />
-          ) : (
-            <div className={styles['recipe__hero-placeholder']} aria-hidden="true" />
-          )}
-        </figure>
+        {!recipe.video_url && (
+          <figure className={styles['recipe__hero']}>
+            {recipe.image ? (
+              <img
+                src={recipeImageUrl(recipe.image)}
+                alt={recipe.title}
+                className={styles['recipe__hero-image']}
+              />
+            ) : (
+              <div className={styles['recipe__hero-placeholder']} aria-hidden="true" />
+            )}
+          </figure>
+        )}
+
+        {recipe.video_url && (() => {
+          const ytId = extractYouTubeId(recipe.video_url);
+          const isInstagram = recipe.video_url.includes('instagram.com');
+          if (ytId) {
+            return (
+              <div className={styles['recipe__video']}>
+                <iframe
+                  src={`https://www.youtube.com/embed/${ytId}`}
+                  title="Video"
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                />
+              </div>
+            );
+          }
+          return (
+            <p className={styles['recipe__video-link']}>
+              <a href={recipe.video_url} target="_blank" rel="noopener noreferrer">
+                {isInstagram ? 'Se video på Instagram ↗' : 'Se video ↗'}
+              </a>
+            </p>
+          );
+        })()}
 
         <header className={styles['recipe__header']}>
-          {recipe.meal && (
-            <span className={styles['recipe__category']} aria-label={`Måltidstyp: ${recipe.meal}`}>
-              {recipe.meal}
+          {recipe.meal && recipe.meal.length > 0 && (
+            <span className={styles['recipe__category']} aria-label={`Måltidstyp: ${recipe.meal.join(', ')}`}>
+              {recipe.meal.join(' · ')}
             </span>
           )}
           <h1>{recipe.title}</h1>

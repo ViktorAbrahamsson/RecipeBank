@@ -12,6 +12,20 @@ body {
   color: $color-text;
   font-family: $font-ui;
   line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  scrollbar-gutter: stable;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+main {
+  flex: 1;
 }
 
 a {

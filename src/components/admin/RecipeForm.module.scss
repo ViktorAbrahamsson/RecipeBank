@@ -65,6 +65,30 @@
   padding-right: 2rem;
 }
 
+.form__checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-top: 0.15rem;
+}
+
+.form__checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: $font-ui;
+  font-size: 0.9rem;
+  color: $color-text;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    accent-color: $color-accent;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+  }
+}
+
 .form__content-header {
   display: flex;
   align-items: center;

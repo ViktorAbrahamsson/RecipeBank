@@ -28,7 +28,9 @@ export function RecipeCard({ recipe }: Props) {
           )}
         </div>
         <div className={styles['card__body']}>
-          {recipe.meal && <span className={styles['card__category']}>{recipe.meal}</span>}
+          {recipe.meal && recipe.meal.length > 0 && (
+            <span className={styles['card__category']}>{recipe.meal.join(' · ')}</span>
+          )}
           <h3 className={styles['card__title']}>{recipe.title}</h3>
           <ul className={styles['card__meta']}>
             <li>{recipe.servings} portioner</li>

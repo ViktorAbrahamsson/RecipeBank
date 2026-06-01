@@ -5,8 +5,7 @@ import { Recipe } from '../../types/recipe';
 import { ImageUpload } from './ImageUpload';
 import styles from './RecipeForm.module.scss';
 
-const MEAL_OPTIONS = ['Frukost', 'Lunch', 'Middag', 'Efterrätt', 'Fika', 'Tillbehör', 'Snack'];
-const TYPE_OPTIONS = ['Soppa', 'Gryta', 'Sallad', 'Wrap', 'Smörgås', 'Dryck', 'Bakverk', 'Tårta', 'Kakor', 'Gröt', 'Sås'];
+const MEAL_OPTIONS = ['Frukost', 'Lunch', 'Tillbehör', 'Fika', 'Kvällsmat', 'Efterrätt', 'Snack'];
 
 function toSlug(title: string): string {
   return title
@@ -21,14 +20,14 @@ function toSlug(title: string): string {
 interface FormState {
   slug: string;
   title: string;
-  meal: string;
-  type: string;
+  meal: string[];
   servings: string;
   prep_time: string;
   author: string;
   description: string;
   image: string;
   source: string;
+  video_url: string;
   tags: string;
   content: string;
 }
@@ -48,14 +47,14 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
   const [form, setForm] = useState<FormState>({
     slug: initial?.slug ?? '',
     title: initial?.title ?? '',
-    meal: initial?.meal ?? '',
-    type: initial?.type ?? '',
+    meal: initial?.meal ?? [],
     servings: initial?.servings != null ? String(initial.servings) : '',
     prep_time: initial?.prep_time ?? '',
     author: initial?.author ?? '',
     description: initial?.description ?? '',
     image: initial?.image ?? '',
     source: initial?.source ?? '',
+    video_url: initial?.video_url ?? '',
     tags: initial?.tags?.join(', ') ?? '',
     content: initial?.content ?? '',
   });
@@ -76,14 +75,14 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
     const err = await onSave({
       slug: form.slug,
       title: form.title,
-      meal: form.meal || null,
-      type: form.type || null,
+      meal: form.meal.length > 0 ? form.meal : null,
       servings: parseInt(form.servings, 10),
       prep_time: form.prep_time,
       author: form.author || null,
       description: form.description || null,
       image: form.image || null,
       source: form.source || null,
+      video_url: form.video_url || null,
       tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
       content: form.content,
     } as unknown as Omit<Recipe, 'id' | 'created_at' | 'updated_at'>);
@@ -125,18 +124,24 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
 
       <div className={styles['form__row']}>
         <div className={styles['form__field']}>
-          <label htmlFor="rf-meal" className={styles['form__label']}>Måltid</label>
-          <select id="rf-meal" className={styles['form__select']} value={form.meal} onChange={(e) => set('meal', e.target.value)}>
-            <option value="">–</option>
-            {MEAL_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
-          </select>
-        </div>
-        <div className={styles['form__field']}>
-          <label htmlFor="rf-type" className={styles['form__label']}>Typ</label>
-          <select id="rf-type" className={styles['form__select']} value={form.type} onChange={(e) => set('type', e.target.value)}>
-            <option value="">–</option>
-            {TYPE_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
-          </select>
+          <span className={styles['form__label']}>Måltid</span>
+          <div className={styles['form__checkboxes']}>
+            {MEAL_OPTIONS.map((o) => (
+              <label key={o} className={styles['form__checkbox-label']}>
+                <input
+                  type="checkbox"
+                  checked={form.meal.includes(o)}
+                  onChange={(e) => {
+                    const next = e.target.checked
+                      ? [...form.meal, o]
+                      : form.meal.filter((m) => m !== o);
+                    setForm((f) => ({ ...f, meal: next }));
+                  }}
+                />
+                {o}
+              </label>
+            ))}
+          </div>
         </div>
         <div className={styles['form__field']}>
           <label htmlFor="rf-servings" className={styles['form__label']}>Portioner *</label>
@@ -171,6 +176,10 @@ export function RecipeForm({ initial, onSave, saving }: Props) {
         <div className={styles['form__field']}>
           <label htmlFor="rf-source" className={styles['form__label']}>Källa (URL)</label>
           <input id="rf-source" type="url" className={styles['form__input']} value={form.source} onChange={(e) => set('source', e.target.value)} />
+        </div>
+        <div className={styles['form__field']}>
+          <label htmlFor="rf-video" className={styles['form__label']}>Video (URL)</label>
+          <input id="rf-video" type="url" className={styles['form__input']} placeholder="t.ex. YouTube eller Instagram" value={form.video_url} onChange={(e) => set('video_url', e.target.value)} />
         </div>
       </div>
 

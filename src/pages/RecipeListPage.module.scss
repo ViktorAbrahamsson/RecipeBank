@@ -1,6 +1,7 @@
 @use '../styles/variables' as *;
 
 .recipes {
+  width: 100%;
   max-width: $max-width;
   margin: 0 auto;
   padding: $spacing-page;
@@ -36,11 +37,19 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
     list-style: none;
     padding: 0;
     margin: 0;
+
+    @media (max-width: 850px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   &__empty {
@@ -132,12 +141,17 @@
     flex-shrink: 0;
 
     @media (max-width: 680px) {
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: stretch;
     }
   }
 
   &__select-wrapper {
     position: relative;
+
+    @media (max-width: 680px) {
+      width: 100%;
+    }
 
     &::after {
       content: '';
@@ -156,6 +170,7 @@
 
   &__select {
     appearance: none;
+    width: 100%;
     padding: 0.5rem 1.75rem 0.5rem 0.75rem;
     border: 1px solid $color-muted;
     border-radius: 8px;

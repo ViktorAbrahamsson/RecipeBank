@@ -24,7 +24,7 @@ export function Footer() {
             Receptvalvet
           </span>
           <p className={styles['footer__tagline']}>
-            En plats för familjens recept — sparade för att delas.
+            En plats för familjens recept - sparade för att delas.
           </p>
         </div>
 
