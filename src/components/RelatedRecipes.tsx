@@ -141,7 +141,8 @@ export function RelatedRecipes({ meals, currentSlug }: Props) {
 
   if (!related.length) return null;
 
-  const showControls = related.length >= 4;
+  const showMobileArrows = related.length > 1;
+  const showDesktopArrows = related.length > 3;
   const heading =
     meals.length === 1
       ? `Fler ${meals[0].toLowerCase()}recept`
@@ -154,7 +155,7 @@ export function RelatedRecipes({ meals, currentSlug }: Props) {
       {/* Header row: heading always, controls inline on mobile */}
       <div className={styles['related__header']}>
         <h2 className={styles['related__heading']}>{heading}</h2>
-        {showControls && (
+        {showMobileArrows && (
           <div className={styles['related__header-controls']}>
             <button className={styles['related__btn']} onClick={() => scroll(-1)} disabled={!canScrollLeft} aria-label="Föregående recept">
               <PrevIcon />
@@ -166,9 +167,8 @@ export function RelatedRecipes({ meals, currentSlug }: Props) {
         )}
       </div>
 
-      {/* Slider row: side buttons only visible on desktop */}
       <div className={styles['related__slider']}>
-        {showControls && (
+        {showDesktopArrows && (
           <button className={`${styles['related__btn']} ${styles['related__side-btn']}`} onClick={() => scroll(-1)} disabled={!canScrollLeft} aria-label="Föregående recept" tabIndex={-1} aria-hidden="true">
             <PrevIcon />
           </button>
@@ -193,7 +193,7 @@ export function RelatedRecipes({ meals, currentSlug }: Props) {
             </div>
           ))}
         </div>
-        {showControls && (
+        {showDesktopArrows && (
           <button className={`${styles['related__btn']} ${styles['related__side-btn']}`} onClick={() => scroll(1)} disabled={!canScrollRight} aria-label="Nästa recept" tabIndex={-1} aria-hidden="true">
             <NextIcon />
           </button>
